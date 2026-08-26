@@ -3,6 +3,15 @@
 window.QREG = {
   profiles: [
     {
+      id: 'sample-high',
+      label: '샘플 교과서 (고1·고2) — 자작 지문 데모',
+      publisher: '샘플',
+      grade: '고1·고2',
+      units: [
+        { id: 'u01', label: '1강 The Spotlight Effect', file: 'u01.js' },
+      ],
+    },
+    {
       id: 'sample-mid2',
       label: '샘플 교과서 (중2) — 자작 지문 데모',
       publisher: '샘플',
