@@ -166,9 +166,11 @@
 
   /* ── 4. 본문 보기 ─────────────────── */
   function renderPassage() {
+    const showKo = $('passKo').checked;
     let q = sheetHead('본문 전체');
     unitData.passage.forEach((s, i) => {
-      q += `<div class="cloze-line"><span class="cloze-num">${i + 1}.</span><span class="cloze-en">${esc(s.en)}</span><div class="cloze-ko">${esc(s.ko)}</div></div>`;
+      q += `<div class="cloze-line"><span class="cloze-num">${i + 1}.</span><span class="cloze-en">${esc(s.en)}</span>` +
+        (showKo ? `<div class="cloze-ko">${esc(s.ko)}</div>` : '') + `</div>`;
     });
     q += `<h3 style="margin:16px 0 8px">단어 (${unitData.words.length})</h3>` +
       `<table class="word-table"><tr><th>영어</th><th>뜻</th></tr>` +
@@ -212,6 +214,9 @@
 
   $('selProfile').addEventListener('change', fillUnits);
   $('selUnit').addEventListener('change', loadUnit);
+  $('passKo').addEventListener('change', () => {
+    if (unitData && currentTab === 'passage') renderPassage();
+  });
 
   fillProfiles();
 })();
