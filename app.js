@@ -172,10 +172,6 @@
       q += `<div class="cloze-line"><span class="cloze-num">${i + 1}.</span><span class="cloze-en">${esc(s.en)}</span>` +
         (showKo ? `<div class="cloze-ko">${esc(s.ko)}</div>` : '') + `</div>`;
     });
-    q += `<h3 style="margin:16px 0 8px">단어 (${unitData.words.length})</h3>` +
-      `<table class="word-table"><tr><th>영어</th><th>뜻</th></tr>` +
-      unitData.words.map((w) => `<tr><td>${esc(w.en)}</td><td>${esc(w.ko)}</td></tr>`).join('') +
-      `</table>`;
     showSheets(q, sheetHead('본문 전체') + '<p>정답지가 따로 없는 자료입니다.</p>');
   }
 
