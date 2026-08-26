@@ -1,0 +1,183 @@
+/* 영어 내신 문제 도구 — 화면·인쇄 스타일 */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: "Malgun Gothic", "맑은 고딕", -apple-system, sans-serif;
+  background: #f2f4f7;
+  color: #222;
+  line-height: 1.6;
+}
+
+.topbar {
+  background: #1d3557;
+  color: #fff;
+  padding: 14px 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+}
+.topbar h1 { font-size: 19px; }
+.selectors { display: flex; gap: 14px; flex-wrap: wrap; }
+.selectors label { font-size: 13px; display: flex; align-items: center; gap: 6px; }
+.selectors select { padding: 5px 8px; border-radius: 6px; border: none; font-size: 14px; }
+
+.tabs {
+  display: flex;
+  gap: 6px;
+  padding: 12px 20px 0;
+  flex-wrap: wrap;
+}
+.tabs button {
+  padding: 8px 16px;
+  border: 1px solid #cbd5e1;
+  border-bottom: none;
+  border-radius: 8px 8px 0 0;
+  background: #e2e8f0;
+  cursor: pointer;
+  font-size: 14px;
+}
+.tabs button.active { background: #fff; font-weight: 700; color: #1d3557; }
+
+.options {
+  background: #fff;
+  margin: 0 20px;
+  padding: 14px 16px;
+  border: 1px solid #cbd5e1;
+  border-radius: 0 8px 8px 8px;
+}
+.opt-panel { display: flex; gap: 18px; align-items: center; flex-wrap: wrap; font-size: 14px; }
+.opt-panel label { display: flex; align-items: center; gap: 6px; }
+.opt-panel select { padding: 5px 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; }
+.hidden { display: none !important; }
+
+button.primary {
+  background: #e63946;
+  color: #fff;
+  border: none;
+  padding: 9px 22px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+}
+button.primary:hover { background: #c92c39; }
+
+.actionbar {
+  margin: 12px 20px 0;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.actionbar button {
+  padding: 8px 14px;
+  border: 1px solid #94a3b8;
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+  font-size: 13px;
+}
+.actionbar button:hover { background: #f1f5f9; }
+
+main { padding: 14px 20px 40px; }
+.empty { text-align: center; color: #64748b; margin-top: 40px; }
+
+/* ── 시험지(공통) ─────────────────────────── */
+.sheet {
+  background: #fff;
+  max-width: 800px;
+  margin: 0 auto 24px;
+  padding: 36px 42px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  min-height: 200px;
+}
+.sheet:empty { display: none; }
+.hidden-screen { display: none; }
+
+.sheet-head { border-bottom: 3px double #222; padding-bottom: 10px; margin-bottom: 18px; }
+.sheet-head h2 { font-size: 20px; text-align: center; }
+.sheet-head .sub { text-align: center; font-size: 13px; color: #555; margin-top: 2px; }
+.name-line {
+  display: flex;
+  justify-content: flex-end;
+  gap: 24px;
+  font-size: 13px;
+  margin-top: 10px;
+}
+.name-line span { border-bottom: 1px solid #999; min-width: 130px; display: inline-block; }
+
+.passage-box {
+  border: 1.5px solid #222;
+  padding: 14px 16px;
+  margin-bottom: 18px;
+  font-size: 14.5px;
+}
+.passage-box .direction { font-weight: 700; margin-bottom: 8px; font-size: 14px; }
+
+.q-item { margin-bottom: 18px; page-break-inside: avoid; font-size: 15px; }
+.q-item .q-text { font-weight: 600; white-space: pre-line; }
+.q-item .q-num { font-weight: 800; margin-right: 4px; }
+.q-item .pts { font-size: 12px; color: #666; font-weight: 400; }
+.choices { list-style: none; margin-top: 6px; padding-left: 8px; }
+.choices li { margin: 3px 0; }
+.write-box {
+  border: 1px solid #999;
+  height: 56px;
+  margin-top: 8px;
+  border-radius: 2px;
+}
+
+/* 빈칸 암기지 */
+.cloze-line { margin-bottom: 14px; page-break-inside: avoid; }
+.cloze-num { font-weight: 700; margin-right: 6px; }
+.cloze-en { font-size: 15.5px; }
+.cloze-ko { font-size: 13px; color: #555; margin-left: 24px; }
+.blank {
+  display: inline-block;
+  border-bottom: 1.5px solid #222;
+  min-width: 64px;
+  text-align: center;
+  font-weight: 700;
+  color: #1d3557;
+}
+.blank.hint-mode { color: #222; font-weight: 400; letter-spacing: 1px; }
+
+/* 단어시험 표 */
+table.word-table { width: 100%; border-collapse: collapse; font-size: 15px; }
+.word-table th, .word-table td { border: 1px solid #555; padding: 8px 10px; }
+.word-table th { background: #f1f5f9; font-size: 13px; }
+.word-table td.no { text-align: center; width: 40px; }
+.word-table td.ans { width: 45%; }
+
+/* 영작 연습 */
+.scr-words { margin: 6px 0 8px; display: flex; flex-wrap: wrap; gap: 6px; }
+.scr-words span {
+  border: 1px solid #555;
+  border-radius: 6px;
+  padding: 2px 10px;
+  font-size: 14.5px;
+  background: #fafafa;
+}
+.scr-line { border-bottom: 1px solid #999; height: 30px; margin-top: 6px; }
+
+/* 정답지 */
+.answer-sheet .a-item { margin-bottom: 12px; font-size: 14.5px; page-break-inside: avoid; }
+.answer-sheet .a-ans { color: #c92c39; font-weight: 700; }
+.answer-sheet .a-exp { font-size: 13px; color: #444; margin-left: 22px; }
+
+footer { text-align: center; padding: 16px; color: #94a3b8; }
+
+/* ── 인쇄 ─────────────────────────── */
+@media print {
+  @page { size: A4; margin: 15mm 13mm; }
+  body { background: #fff; }
+  .no-print { display: none !important; }
+  main { padding: 0; }
+  .sheet { border: none; max-width: none; margin: 0; padding: 0; border-radius: 0; }
+  /* 어떤 시트를 인쇄할지: body 클래스로 결정 */
+  body.print-q #sheetA { display: none !important; }
+  body.print-a #sheetQ { display: none !important; }
+  body.print-a #sheetA { display: block !important; }
+}

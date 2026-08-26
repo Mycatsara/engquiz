@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>영어 내신 문제 도구</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="topbar no-print">
+  <h1>영어 내신 문제 도구</h1>
+  <div class="selectors">
+    <label>교과서
+      <select id="selProfile"></select>
+    </label>
+    <label>단원
+      <select id="selUnit"></select>
+    </label>
+  </div>
+</header>
+
+<nav class="tabs no-print" id="tabs">
+  <button data-tab="cloze" class="active">빈칸 암기지</button>
+  <button data-tab="word">단어 시험</button>
+  <button data-tab="scramble">영작 연습</button>
+  <button data-tab="exam">시험지</button>
+  <button data-tab="passage">본문 보기</button>
+</nav>
+
+<section class="options no-print">
+  <div class="opt-panel" id="opt-cloze">
+    <label>빈칸 비율
+      <select id="clozeRate">
+        <option value="0.2">쉬움 (20%)</option>
+        <option value="0.35" selected>보통 (35%)</option>
+        <option value="0.5">어려움 (50%)</option>
+      </select>
+    </label>
+    <label><input type="checkbox" id="clozeHint" checked> 첫 글자 힌트</label>
+    <label><input type="checkbox" id="clozeKo" checked> 해석 함께 표시</label>
+    <button class="primary" id="btnCloze">만들기</button>
+  </div>
+
+  <div class="opt-panel hidden" id="opt-word">
+    <label>문항 수
+      <select id="wordCount">
+        <option value="10" selected>10</option>
+        <option value="15">15</option>
+        <option value="20">20</option>
+      </select>
+    </label>
+    <label>방향
+      <select id="wordDir">
+        <option value="e2k" selected>영어 → 한글</option>
+        <option value="k2e">한글 → 영어</option>
+        <option value="mix">섞어서</option>
+      </select>
+    </label>
+    <button class="primary" id="btnWord">만들기</button>
+  </div>
+
+  <div class="opt-panel hidden" id="opt-scramble">
+    <label>문항 수
+      <select id="scrCount">
+        <option value="5" selected>5</option>
+        <option value="8">8</option>
+        <option value="10">전체(최대 10)</option>
+      </select>
+    </label>
+    <button class="primary" id="btnScramble">만들기</button>
+  </div>
+
+  <div class="opt-panel hidden" id="opt-exam">
+    <label>객관식 <select id="examMc"></select> 문항</label>
+    <label>서술형 <select id="examShort"></select> 문항</label>
+    <label><input type="checkbox" id="examShuffle" checked> 선택지 순서 섞기</label>
+    <button class="primary" id="btnExam">만들기</button>
+  </div>
+
+  <div class="opt-panel hidden" id="opt-passage"></div>
+</section>
+
+<div class="actionbar no-print hidden" id="actionbar">
+  <button id="btnPrintQ">문제지 인쇄</button>
+  <button id="btnPrintA">정답지 인쇄</button>
+  <button id="btnToggleA">정답 화면에서 보기/숨기기</button>
+</div>
+
+<main>
+  <div id="sheetQ" class="sheet"></div>
+  <div id="sheetA" class="sheet answer-sheet hidden-screen"></div>
+  <p id="emptyMsg" class="empty no-print">위에서 유형을 고르고 <b>만들기</b>를 누르면 문제지가 나타납니다.</p>
+</main>
+
+<footer class="no-print">
+  <small>개인 학습용 도구 · 만든 문제지는 외부 판매·배포 금지</small>
+</footer>
+
+<script src="logic.js"></script>
+<script src="data/registry.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
