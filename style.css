@@ -151,17 +151,6 @@ table.word-table { width: 100%; border-collapse: collapse; font-size: 15px; }
 .word-table td.no { text-align: center; width: 40px; }
 .word-table td.ans { width: 45%; }
 
-/* 영작 연습 */
-.scr-words { margin: 6px 0 8px; display: flex; flex-wrap: wrap; gap: 6px; }
-.scr-words span {
-  border: 1px solid #555;
-  border-radius: 6px;
-  padding: 2px 10px;
-  font-size: 14.5px;
-  background: #fafafa;
-}
-.scr-line { border-bottom: 1px solid #999; height: 30px; margin-top: 6px; }
-
 /* 정답지 */
 .answer-sheet .a-item { margin-bottom: 12px; font-size: 14.5px; page-break-inside: avoid; }
 .answer-sheet .a-ans { color: #c92c39; font-weight: 700; }

@@ -51,17 +51,6 @@ const rng = QLogic.mulberry32(12345);
   }
 }
 
-// scrambleSentence: 단어 보존 + 순서 변경 보장
-{
-  for (let i = 0; i < 30; i++) {
-    const r = QLogic.mulberry32(i * 7 + 1);
-    const s = QLogic.scrambleSentence('I was too shy to speak in English.', r);
-    ok(s.words.slice().sort().join() === s.original.slice().sort().join(), 'scramble 단어 보존 (seed ' + i + ')');
-    ok(s.words.join(' ') !== s.original.join(' '), 'scramble 순서 변경 (seed ' + i + ')');
-    ok(!s.words.join(' ').includes('.'), 'scramble 끝 문장부호 제거 (seed ' + i + ')');
-  }
-}
-
 // shuffleChoices: 정답 재계산
 {
   const q = { type: 'mc', q: 'x', choices: ['A', 'B', 'C', 'D', 'E'], answer: 1 };

@@ -54,13 +54,6 @@
 
   function onUnitReady() {
     if (!unitData) return;
-    // 시험지 탭의 문항 수 선택지를 은행 보유량에 맞춘다
-    const mcMax = unitData.bank.filter((q) => q.type === 'mc').length;
-    const shMax = unitData.bank.filter((q) => q.type === 'short').length;
-    const opts = (max) => Array.from({ length: max + 1 }, (_, i) =>
-      `<option value="${i}" ${i === max ? 'selected' : ''}>${i}</option>`).join('');
-    $('examMc').innerHTML = opts(mcMax);
-    $('examShort').innerHTML = opts(shMax);
     if (currentTab === 'passage') renderPassage();
   }
 
@@ -137,30 +130,18 @@
     showSheets(q, a);
   }
 
-  /* ── 3. 영작 연습 (단어 배열) ─────────────────── */
-  function genScramble() {
-    const n = parseInt($('scrCount').value, 10);
-    const r = rng();
-    const picked = QLogic.pickN(unitData.passage, n, r);
-    let q = sheetHead('영작 연습 — 단어 배열');
-    let a = sheetHead('영작 연습 — 정답');
-    picked.forEach((s, i) => {
-      const sc = QLogic.scrambleSentence(s.en, r);
-      q += `<div class="q-item"><div class="q-text"><span class="q-num">${i + 1}.</span>${esc(s.ko)}</div>
-        <div class="scr-words">${sc.words.map((w) => `<span>${esc(w)}</span>`).join('')}</div>
-        <div class="scr-line"></div></div>`;
-      a += `<div class="a-item"><b>${i + 1}.</b> <span class="a-ans">${esc(s.en)}</span></div>`;
-    });
-    showSheets(q, a);
-  }
-
-  /* ── 4. 시험지 (문제은행) ─────────────────── */
+  /* ── 3. 시험지 (문제은행) ─────────────────── */
   function genExam() {
     const mcN = parseInt($('examMc').value, 10);
     const shN = parseInt($('examShort').value, 10);
     if (mcN + shN === 0) { alert('문항 수를 1개 이상 골라주세요.'); return; }
     const doShuffle = $('examShuffle').checked;
     const r = rng();
+    const mcAvail = unitData.bank.filter((x) => x.type === 'mc').length;
+    const shAvail = unitData.bank.filter((x) => x.type === 'short').length;
+    if ((mcN > 0 && mcAvail < mcN) || (shN > 0 && shAvail < shN)) {
+      alert('이 단원 문제은행에는 객관식 ' + mcAvail + '개, 서술형 ' + shAvail + '개가 있어 그 범위 안에서 만듭니다.');
+    }
     let selected = QLogic.selectFromBank(unitData.bank, mcN, shN, r);
     if (doShuffle) {
       selected = selected.map((qq) => (qq.type === 'mc' ? QLogic.shuffleChoices(qq, r) : qq));
@@ -183,7 +164,7 @@
     showSheets(q, a);
   }
 
-  /* ── 5. 본문 보기 ─────────────────── */
+  /* ── 4. 본문 보기 ─────────────────── */
   function renderPassage() {
     let q = sheetHead('본문 전체');
     unitData.passage.forEach((s, i) => {
@@ -216,7 +197,6 @@
   }
   $('btnCloze').addEventListener('click', guard(genCloze));
   $('btnWord').addEventListener('click', guard(genWord));
-  $('btnScramble').addEventListener('click', guard(genScramble));
   $('btnExam').addEventListener('click', guard(genExam));
 
   function printSheet(mode) {

@@ -66,23 +66,6 @@
     });
   }
 
-  /* 단어 배열 영작: 문장의 단어를 섞는다. 2단어 이상이면 원문과 다른 순서를 보장 */
-  function scrambleSentence(sentence, rng) {
-    const words = sentence.replace(/[.?!]+$/, '').split(/\s+/).filter(Boolean);
-    if (words.length < 2) return { words: words.slice(), original: words.slice() };
-    let mixed = shuffle(words, rng);
-    let guard = 0;
-    while (mixed.join(' ') === words.join(' ') && guard < 20) {
-      mixed = shuffle(words, rng);
-      guard++;
-    }
-    if (mixed.join(' ') === words.join(' ')) {
-      // 마지막 안전장치: 앞 두 단어 교환
-      [mixed[0], mixed[1]] = [mixed[1], mixed[0]];
-    }
-    return { words: mixed, original: words.slice() };
-  }
-
   /* 객관식 선택지 섞기: answer 인덱스를 새 위치로 재계산 */
   function shuffleChoices(question, rng) {
     const order = shuffle(question.choices.map(function (_, i) { return i; }), rng);
@@ -115,7 +98,6 @@
     pickN: pickN,
     tokenize: tokenize,
     makeCloze: makeCloze,
-    scrambleSentence: scrambleSentence,
     shuffleChoices: shuffleChoices,
     selectFromBank: selectFromBank,
     makeWordTest: makeWordTest,

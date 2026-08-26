@@ -24,7 +24,6 @@
 <nav class="tabs no-print" id="tabs">
   <button data-tab="cloze" class="active">빈칸 암기지</button>
   <button data-tab="word">단어 시험</button>
-  <button data-tab="scramble">영작 연습</button>
   <button data-tab="exam">시험지</button>
   <button data-tab="passage">본문 보기</button>
 </nav>
@@ -61,20 +60,24 @@
     <button class="primary" id="btnWord">만들기</button>
   </div>
 
-  <div class="opt-panel hidden" id="opt-scramble">
-    <label>문항 수
-      <select id="scrCount">
-        <option value="5" selected>5</option>
-        <option value="8">8</option>
-        <option value="10">전체(최대 10)</option>
-      </select>
-    </label>
-    <button class="primary" id="btnScramble">만들기</button>
-  </div>
-
   <div class="opt-panel hidden" id="opt-exam">
-    <label>객관식 <select id="examMc"></select> 문항</label>
-    <label>서술형 <select id="examShort"></select> 문항</label>
+    <label>객관식
+      <select id="examMc">
+        <option value="0">0</option>
+        <option value="10" selected>10</option>
+        <option value="20">20</option>
+        <option value="30">30</option>
+        <option value="40">40</option>
+        <option value="50">50</option>
+      </select> 문항</label>
+    <label>서술형
+      <select id="examShort">
+        <option value="0">0</option>
+        <option value="5" selected>5</option>
+        <option value="10">10</option>
+        <option value="15">15</option>
+        <option value="20">20</option>
+      </select> 문항</label>
     <label><input type="checkbox" id="examShuffle" checked> 선택지 순서 섞기</label>
     <button class="primary" id="btnExam">만들기</button>
   </div>
