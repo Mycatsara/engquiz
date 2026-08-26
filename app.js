@@ -122,9 +122,13 @@
     const n = parseInt($('wordCount').value, 10);
     const dir = $('wordDir').value;
     const items = QLogic.makeWordTest(unitData.words, n, dir, rng());
-    let q = sheetHead('단어 시험');
+    const title = '단어 시험 (' + items.length + '문항)';
+    if (items.length < n) {
+      alert('이 단원의 단어장에는 ' + unitData.words.length + '개가 있어 ' + items.length + '문항으로 만듭니다.');
+    }
+    let q = sheetHead(title);
     q += `<table class="word-table"><tr><th>번호</th><th>문제</th><th>답</th></tr>`;
-    let a = sheetHead('단어 시험 — 정답');
+    let a = sheetHead(title + ' — 정답');
     items.forEach((it, i) => {
       q += `<tr><td class="no">${i + 1}</td><td>${esc(it.prompt)}</td><td class="ans"></td></tr>`;
       a += `<div class="a-item"><b>${i + 1}.</b> ${esc(it.prompt)} → <span class="a-ans">${esc(it.answer)}</span></div>`;
