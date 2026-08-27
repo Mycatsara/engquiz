@@ -147,28 +147,70 @@
       selected = selected.map((qq) => (qq.type === 'mc' ? QLogic.shuffleChoices(qq, r) : qq));
     }
     let q = sheetHead('영어 내신 대비 평가');
-    q += `<div class="passage-box"><div class="direction">※ 다음 글을 읽고 물음에 답하시오.</div>` +
-      unitData.passage.map((s) => esc(s.en)).join(' ') + `</div>`;
     let a = sheetHead('영어 내신 대비 평가 — 정답 및 해설');
-    selected.forEach((qq, i) => {
-      q += `<div class="q-item"><div class="q-text"><span class="q-num">${i + 1}.</span>${esc(qq.q)} <span class="pts">[${qq.points}점]</span></div>`;
-      if (qq.type === 'mc') {
-        q += `<ol class="choices">` + qq.choices.map((c, j) => `<li>${CIRC[j]} ${esc(c)}</li>`).join('') + `</ol>`;
-        a += `<div class="a-item"><b>${i + 1}.</b> <span class="a-ans">${CIRC[qq.answer]} ${esc(qq.choices[qq.answer])}</span><div class="a-exp">${esc(qq.explain || '')}</div></div>`;
-      } else {
-        q += `<div class="write-box"></div>`;
-        a += `<div class="a-item"><b>${i + 1}.</b> <span class="a-ans">${esc(qq.answer)}</span><div class="a-exp">${esc(qq.explain || '')}</div></div>`;
-      }
-      q += `</div>`;
-    });
+    const secs = Array.isArray(unitData.sections) && unitData.sections.length ? unitData.sections : null;
+    if (!secs) {
+      // 구간 정보가 없는 단원: 본문 전체 + 문제 나열 (기존 방식)
+      q += `<div class="passage-box"><div class="direction">※ 다음 글을 읽고 물음에 답하시오.</div>` +
+        unitData.passage.map((s) => esc(s.en)).join(' ') + `</div>`;
+      selected.forEach((qq, i) => {
+        const it = renderExamItem(qq, i + 1);
+        q += it.qh; a += it.ah;
+      });
+    } else {
+      // 구간별 출력: [지문 조각 → 그 구간의 문제들] 반복. F=지문 전체 참고, V=지문 불필요
+      const groups = secs.map((s) => ({ id: s.id, start: s.start, end: s.end }))
+        .concat([{ id: 'F' }, { id: 'V' }]);
+      let num = 0;
+      groups.forEach((g) => {
+        const qs = selected.filter((x) => (x.sec || 'V') === g.id);
+        if (!qs.length) return;
+        const first = num + 1;
+        const last = num + qs.length;
+        const range = first === last ? `(${first})` : `(${first}~${last})`;
+        if (g.id === 'F') {
+          q += `<div class="direction-line">※ 위 지문 전체를 참고하여 물음에 답하시오. ${range}</div>`;
+        } else if (g.id === 'V') {
+          q += `<div class="direction-line">※ 다음 물음에 답하시오. ${range}</div>`;
+        } else {
+          q += `<div class="passage-box"><div class="direction">※ 다음 글을 읽고 물음에 답하시오. ${range}</div>` +
+            unitData.passage.slice(g.start, g.end + 1).map((s) => esc(s.en)).join(' ') + `</div>`;
+        }
+        qs.forEach((qq) => {
+          num++;
+          const it = renderExamItem(qq, num);
+          q += it.qh; a += it.ah;
+        });
+      });
+    }
     showSheets(q, a);
+  }
+
+  /* 시험지 문항 1개 렌더 (문제지·정답지 HTML 한 쌍) */
+  function renderExamItem(qq, num) {
+    let qh = `<div class="q-item"><div class="q-text"><span class="q-num">${num}.</span>${esc(qq.q)} <span class="pts">[${qq.points}점]</span></div>`;
+    let ah;
+    if (qq.type === 'mc') {
+      qh += `<ol class="choices">` + qq.choices.map((c, j) => `<li>${CIRC[j]} ${esc(c)}</li>`).join('') + `</ol>`;
+      ah = `<div class="a-item"><b>${num}.</b> <span class="a-ans">${CIRC[qq.answer]} ${esc(qq.choices[qq.answer])}</span><div class="a-exp">${esc(qq.explain || '')}</div></div>`;
+    } else {
+      qh += `<div class="write-box"></div>`;
+      ah = `<div class="a-item"><b>${num}.</b> <span class="a-ans">${esc(qq.answer)}</span><div class="a-exp">${esc(qq.explain || '')}</div></div>`;
+    }
+    qh += `</div>`;
+    return { qh: qh, ah: ah };
   }
 
   /* ── 4. 본문 보기 ─────────────────── */
   function renderPassage() {
     const showKo = $('passKo').checked;
     let q = sheetHead('본문 전체');
+    const heads = {};
+    if (Array.isArray(unitData.sections)) {
+      unitData.sections.forEach((s) => { heads[s.start] = s.label; });
+    }
     unitData.passage.forEach((s, i) => {
+      if (heads[i]) q += `<h3 class="sec-head">${esc(heads[i])}</h3>`;
       q += `<div class="cloze-line"><span class="cloze-num">${i + 1}.</span><span class="cloze-en">${esc(s.en)}</span>` +
         (showKo ? `<div class="cloze-ko">${esc(s.ko)}</div>` : '') + `</div>`;
     });

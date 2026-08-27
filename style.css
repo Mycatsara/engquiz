@@ -116,6 +116,15 @@ main { padding: 14px 20px 40px; }
 }
 .passage-box .direction { font-weight: 700; margin-bottom: 8px; font-size: 14px; }
 
+.direction-line {
+  font-weight: 700;
+  font-size: 14px;
+  margin: 22px 0 12px;
+  padding-top: 10px;
+  border-top: 1px dashed #999;
+}
+.sec-head { margin: 18px 0 8px; font-size: 15px; color: #1d3557; }
+
 .q-item { margin-bottom: 18px; page-break-inside: avoid; font-size: 15px; }
 .q-item .q-text { font-weight: 600; white-space: pre-line; }
 .q-item .q-num { font-weight: 800; margin-right: 4px; }

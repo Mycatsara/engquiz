@@ -4,6 +4,15 @@
 window.QUNITS = window.QUNITS || {};
 window.QUNITS['miraen-eng2/u05'] = {
   title: '5과 Inspiring Words for Moving Forward',
+  /* 시험지 구간: 각 구간의 지문 + 그 구간 문제(sec)로 묶어 출력한다.
+   * sec 'F' = 지문 전체 참고 문항, 'V' = 지문 불필요(어법·어휘·영작) 문항 */
+  sections: [
+    { id: 'A', label: '도입', start: 0, end: 6 },
+    { id: 'B', label: '연설 1 전반 (아디치에 — 의대를 그만둔 이야기)', start: 7, end: 22 },
+    { id: 'C', label: '연설 1 후반 (아디치에 — 졸업생에게 주는 조언)', start: 23, end: 31 },
+    { id: 'D', label: '연설 2 전반 (팀 쿡 — 기술의 명과 암)', start: 32, end: 47 },
+    { id: 'E', label: '연설 2 후반 (팀 쿡 — 기술과 인문학)', start: 48, end: 55 },
+  ],
   passage: [
     { en: 'A commencement address is a speech given at a school graduation ceremony.',
       ko: '졸업식 축사는 학교 졸업식에서 하는 연설이다.' },
@@ -245,7 +254,7 @@ window.QUNITS['miraen-eng2/u05'] = {
   bank: [
     /* ══ 객관식 — 클로드 출제 ══ */
     {
-      id: 'm2u05-mc-01', type: 'mc', points: 4,
+      id: 'm2u05-mc-01', type: 'mc', points: 4, sec: 'F', sec: 'F',
       q: '윗글 전체의 주제로 가장 적절한 것은?',
       choices: [
         '유명 인사들의 성공 비결 분석',
@@ -258,7 +267,7 @@ window.QUNITS['miraen-eng2/u05'] = {
       explain: '도입부에서 졸업식 축사의 의의를 설명하고, 두 축사 발췌문이 진로와 삶에 대한 조언을 담고 있다.',
     },
     {
-      id: 'm2u05-mc-02', type: 'mc', points: 4,
+      id: 'm2u05-mc-02', type: 'mc', points: 4, sec: 'A', sec: 'A',
       q: '도입 문단의 목적으로 가장 적절한 것은?',
       choices: [
         '졸업식 축사가 무엇인지 설명하고 이어질 연설들을 소개하려고',
@@ -271,7 +280,7 @@ window.QUNITS['miraen-eng2/u05'] = {
       explain: '도입부는 commencement address의 정의(1~2번 문장)와 의의를 설명하고 "The following speeches will guide you..."로 두 연설을 소개한다.',
     },
     {
-      id: 'm2u05-mc-03', type: 'mc', points: 4,
+      id: 'm2u05-mc-03', type: 'mc', points: 4, sec: 'F', sec: 'F',
       q: '아디치에(Adichie) 연설의 요지로 가장 적절한 것은?',
       choices: [
         '의사가 되는 것이 가장 안정적인 진로이다.',
@@ -284,7 +293,7 @@ window.QUNITS['miraen-eng2/u05'] = {
       explain: '의대를 그만두고 사랑하는 일을 택한 경험과 "Please do not twist yourself into shapes to please others."라는 조언이 핵심이다.',
     },
     {
-      id: 'm2u05-mc-04', type: 'mc', points: 4,
+      id: 'm2u05-mc-04', type: 'mc', points: 4, sec: 'F', sec: 'F',
       q: '팀 쿡(Tim Cook) 연설의 요지로 가장 적절한 것은?',
       choices: [
         '기술은 인문학·가치관과 결합될 때 진정한 힘을 갖는다.',
@@ -297,7 +306,7 @@ window.QUNITS['miraen-eng2/u05'] = {
       explain: '"Technology alone is not enough. It is technology married with the liberal arts... that makes our hearts sing."이 연설의 핵심이다.',
     },
     {
-      id: 'm2u05-mc-05', type: 'mc', points: 4,
+      id: 'm2u05-mc-05', type: 'mc', points: 4, sec: 'F', sec: 'F',
       q: '아디치에 연설의 제목으로 가장 적절한 것은?',
       choices: [
         'Twist Yourself to Fit In',
@@ -310,7 +319,7 @@ window.QUNITS['miraen-eng2/u05'] = {
       explain: '남을 기쁘게 하기 위해서가 아니라 자신의 진짜 열망(desire)을 따르라는 내용이므로 ②가 알맞다.',
     },
     {
-      id: 'm2u05-mc-06', type: 'mc', points: 4,
+      id: 'm2u05-mc-06', type: 'mc', points: 4, sec: 'F', sec: 'F',
       q: '팀 쿡 연설의 제목으로 가장 적절한 것은?',
       choices: [
         'Technology Married with the Humanities',
@@ -323,7 +332,7 @@ window.QUNITS['miraen-eng2/u05'] = {
       explain: '기술과 인문학의 결합이 연설 전체를 관통하는 주제이다.',
     },
     {
-      id: 'm2u05-mc-07', type: 'mc', points: 4,
+      id: 'm2u05-mc-07', type: 'mc', points: 4, sec: 'A', sec: 'A',
       q: '도입 문단의 내용과 일치하는 것은?',
       choices: [
         '졸업식 축사는 보통 졸업생 대표가 맡는다.',
@@ -336,7 +345,7 @@ window.QUNITS['miraen-eng2/u05'] = {
       explain: '2번 문장 "offering advice or inspiration to the students"와 일치한다. 축사는 초청받은 저명 인사가 맡는다.',
     },
     {
-      id: 'm2u05-mc-08', type: 'mc', points: 4,
+      id: 'm2u05-mc-08', type: 'mc', points: 4, sec: 'B', sec: 'B',
       q: '아디치에 연설의 내용과 일치하는 것은?',
       choices: [
         '그녀는 어릴 때부터 의사가 되는 것이 꿈이었다.',
@@ -349,7 +358,7 @@ window.QUNITS['miraen-eng2/u05'] = {
       explain: '"Deep down I knew that what I really wanted to do was to write stories."와 일치. 의대는 1년 만에 그만두었고, 미국에서는 의학과 관련 없는 것을 공부했다.',
     },
     {
-      id: 'm2u05-mc-09', type: 'mc', points: 4,
+      id: 'm2u05-mc-09', type: 'mc', points: 4, sec: 'B', sec: 'B',
       q: '아디치에 연설의 내용과 일치하지 않는 것은?',
       choices: [
         '주변 사람들은 그녀가 의사가 되기를 기대했다.',
@@ -362,7 +371,7 @@ window.QUNITS['miraen-eng2/u05'] = {
       explain: '"but I did not feel courageous at all" — 그녀는 용기가 아니라 열망(desire)을 느꼈다고 말한다.',
     },
     {
-      id: 'm2u05-mc-10', type: 'mc', points: 4,
+      id: 'm2u05-mc-10', type: 'mc', points: 4, sec: 'F', sec: 'F',
       q: '아디치에 연설의 내용과 일치하는 것은?',
       choices: [
         '그녀는 자신의 성공을 처음부터 확신했다.',
@@ -375,7 +384,7 @@ window.QUNITS['miraen-eng2/u05'] = {
       explain: '"But the point is, I tried."와 일치. 성공도 장학금도 보장되지 않았고, 남에게 맞춰 자신을 비틀지 말라고 조언한다.',
     },
     {
-      id: 'm2u05-mc-11', type: 'mc', points: 4,
+      id: 'm2u05-mc-11', type: 'mc', points: 4, sec: 'D', sec: 'D',
       q: '팀 쿡 연설의 내용과 일치하는 것은?',
       choices: [
         '기술만으로 세상의 모든 문제를 해결할 수 있다.',
@@ -388,7 +397,7 @@ window.QUNITS['miraen-eng2/u05'] = {
       explain: '"billions of people are leading healthier, more productive, more fulfilling lives"와 일치. 기술만으로는 해결책이 아니며, 기술은 아무것도 원하지 않는다고 말한다.',
     },
     {
-      id: 'm2u05-mc-12', type: 'mc', points: 4,
+      id: 'm2u05-mc-12', type: 'mc', points: 4, sec: 'F', sec: 'F',
       q: '팀 쿡 연설의 내용과 일치하지 않는 것은?',
       choices: [
         '자신보다 큰 것을 위해 일할 때 목적을 찾게 된다.',
@@ -401,7 +410,7 @@ window.QUNITS['miraen-eng2/u05'] = {
       explain: '화자가 걱정하는 것은 컴퓨터가 아니라 "people thinking like computers", 즉 사람이 컴퓨터처럼 생각하는 것이다.',
     },
     {
-      id: 'm2u05-mc-13', type: 'mc', points: 4,
+      id: 'm2u05-mc-13', type: 'mc', points: 4, sec: 'B', sec: 'B',
       q: '아디치에가 의과대학을 그만둔 이유로 가장 적절한 것은?',
       choices: [
         '성적이 좋지 않아서',
@@ -414,14 +423,14 @@ window.QUNITS['miraen-eng2/u05'] = {
       explain: '"I realized I would be a very unhappy doctor, and I really did not want to be responsible for the unintentional deaths of my patients."',
     },
     {
-      id: 'm2u05-mc-14', type: 'mc', points: 4,
+      id: 'm2u05-mc-14', type: 'mc', points: 4, sec: 'B', sec: 'B',
       q: '아디치에가 기회를 포기하며 느꼈다고 말한 것은?',
       choices: ['용기', '두려움', '열망', '후회', '안도감'],
       answer: 2,
       explain: '"I did not feel courageous at all. I felt desire." — 용기가 아니라 열망을 느꼈다.',
     },
     {
-      id: 'm2u05-mc-15', type: 'mc', points: 4,
+      id: 'm2u05-mc-15', type: 'mc', points: 4, sec: 'D', sec: 'D',
       q: '팀 쿡이 언급한 기술의 부정적 측면이 아닌 것은?',
       choices: [
         '보안에 대한 위협',
@@ -434,7 +443,7 @@ window.QUNITS['miraen-eng2/u05'] = {
       explain: '"threats to security, threats to privacy, fake news, and social media that becomes antisocial"이 부정적 측면이다. 교육 불평등은 기술이 해결을 도울 문제로 언급되었다.',
     },
     {
-      id: 'm2u05-mc-16', type: 'mc', points: 4,
+      id: 'm2u05-mc-16', type: 'mc', points: 4, sec: 'E', sec: 'E',
       q: '팀 쿡이 "사람을 중심에 둔 기술"의 예로 든 것은?',
       choices: [
         '시각장애인이 마라톤을 뛸 수 있게 하는 기술',
@@ -447,7 +456,7 @@ window.QUNITS['miraen-eng2/u05'] = {
       explain: '"a technology that allows the blind person to run a marathon and catches a heart condition before it becomes a heart attack"',
     },
     {
-      id: 'm2u05-mc-17', type: 'mc', points: 4,
+      id: 'm2u05-mc-17', type: 'mc', points: 4, sec: 'A', sec: 'A',
       q: '도입 문단에 따르면, 졸업식 축사를 하는 사람은 주로 누구인가?',
       choices: [
         '교장 선생님',
@@ -460,7 +469,7 @@ window.QUNITS['miraen-eng2/u05'] = {
       explain: '"It is usually given by a notable or famous person who is invited to address the graduating class"',
     },
     {
-      id: 'm2u05-mc-18', type: 'mc', points: 4,
+      id: 'm2u05-mc-18', type: 'mc', points: 4, sec: 'C', sec: 'C',
       q: '아디치에에 따르면, 남에게 맞추어 자신을 비틀었을 때 생기는 일은?',
       choices: [
         '모두가 진짜 나를 좋아하게 된다.',
@@ -473,7 +482,7 @@ window.QUNITS['miraen-eng2/u05'] = {
       explain: '"Then they actually just like that twisted shape, and not you."',
     },
     {
-      id: 'm2u05-mc-19', type: 'mc', points: 4,
+      id: 'm2u05-mc-19', type: 'mc', points: 4, sec: 'B', sec: 'B',
       q: '"I felt desire."에서 desire가 가리키는 것으로 가장 적절한 것은?',
       choices: [
         '의사가 되고 싶은 욕망',
@@ -486,7 +495,7 @@ window.QUNITS['miraen-eng2/u05'] = {
       explain: '바로 다음 문장 "The desire to study something I love, rather than something I did just to please others."가 그 내용을 설명한다.',
     },
     {
-      id: 'm2u05-mc-20', type: 'mc', points: 4,
+      id: 'm2u05-mc-20', type: 'mc', points: 4, sec: 'B', sec: 'B',
       q: '"the lot we have been given"의 의미로 가장 적절한 것은?',
       choices: [
         '우리가 받은 선물 상자',
@@ -499,7 +508,7 @@ window.QUNITS['miraen-eng2/u05'] = {
       explain: '여기서 lot은 "(운명처럼) 주어진 몫, 처지"라는 뜻으로, 주어진 조건 안에서 최선을 다하자는 문맥이다.',
     },
     {
-      id: 'm2u05-mc-21', type: 'mc', points: 4,
+      id: 'm2u05-mc-21', type: 'mc', points: 4, sec: 'D', sec: 'D',
       q: '"That part takes all of us."가 의미하는 바로 가장 적절한 것은?',
       choices: [
         '기술이 우리 모두를 데리고 떠난다.',
@@ -512,7 +521,7 @@ window.QUNITS['miraen-eng2/u05'] = {
       explain: '기술은 아무것도 원하지 않으므로, "그 부분(위대한 일을 원하고 행하는 것)"은 우리의 가치관·헌신·품위 등이 필요하다는 뜻이다.',
     },
     {
-      id: 'm2u05-mc-22', type: 'mc', points: 4,
+      id: 'm2u05-mc-22', type: 'mc', points: 4, sec: 'E', sec: 'E',
       q: '"the humanities are a candle"이라는 비유가 의미하는 것은?',
       choices: [
         '인문학은 곧 사라질 학문이다.',
@@ -525,7 +534,7 @@ window.QUNITS['miraen-eng2/u05'] = {
       explain: '"a candle that shows us where we\'ve been and the danger that lies ahead" — 촛불처럼 과거와 위험을 비추어 준다는 비유이다.',
     },
     {
-      id: 'm2u05-mc-23', type: 'mc', points: 4,
+      id: 'm2u05-mc-23', type: 'mc', points: 4, sec: 'C', sec: 'C',
       q: '"Please do not twist yourself into shapes to please others."에서 화자가 전하려는 바는?',
       choices: [
         '유연한 몸을 만들기 위해 운동하라.',
@@ -538,7 +547,7 @@ window.QUNITS['miraen-eng2/u05'] = {
       explain: 'twist yourself into shapes는 남에게 맞추려 자신을 왜곡하는 것을 비유한다.',
     },
     {
-      id: 'm2u05-mc-24', type: 'mc', points: 4,
+      id: 'm2u05-mc-24', type: 'mc', points: 4, sec: 'D', sec: 'D',
       q: '팀 쿡이 "How will you serve humanity?"라는 질문을 던진 의도로 가장 적절한 것은?',
       choices: [
         '졸업생들이 자신보다 더 큰 목적을 향해 일하기를 바라서',
@@ -551,7 +560,7 @@ window.QUNITS['miraen-eng2/u05'] = {
       explain: '앞 문장 "When you work towards something greater than yourself, you find meaning, you find purpose."의 연장선에 있는 질문이다.',
     },
     {
-      id: 'm2u05-mc-25', type: 'mc', points: 4,
+      id: 'm2u05-mc-25', type: 'mc', points: 4, sec: 'D', sec: 'D',
       q: '"social media that becomes antisocial"이 뜻하는 바로 가장 적절한 것은?',
       choices: [
         '소셜 미디어 회사가 문을 닫는 것',
@@ -564,7 +573,7 @@ window.QUNITS['miraen-eng2/u05'] = {
       explain: '연결(social)이 목적인 매체가 반사회적(antisocial)으로 변한다는 역설적 표현으로, 다음 문장 "the very technology that is meant to connect us divides us"와 통한다.',
     },
     {
-      id: 'm2u05-mc-26', type: 'mc', points: 4,
+      id: 'm2u05-mc-26', type: 'mc', points: 4, sec: 'C', sec: 'C',
       q: '아디치에가 자신을 "big sister"라고 부른 이유로 가장 적절한 것은?',
       choices: [
         '졸업생 중에 실제 여동생이 있어서',
@@ -577,7 +586,7 @@ window.QUNITS['miraen-eng2/u05'] = {
       explain: '"I would like to give you some advice as your big sister" — 졸업생들에게 친근한 언니의 입장에서 조언하려는 표현이다.',
     },
     {
-      id: 'm2u05-mc-27', type: 'mc', points: 4,
+      id: 'm2u05-mc-27', type: 'mc', points: 4, sec: 'B', sec: 'B',
       q: '아디치에가 미국에서 하려고 한 일은?',
       choices: [
         '의학 공부를 계속하는 것',
@@ -590,14 +599,14 @@ window.QUNITS['miraen-eng2/u05'] = {
       explain: '"I took exams and got a scholarship to go to the U.S., where I could study something else, not related to medicine."',
     },
     {
-      id: 'm2u05-mc-28', type: 'mc', points: 4,
+      id: 'm2u05-mc-28', type: 'mc', points: 4, sec: 'D', sec: 'D',
       q: '팀 쿡이 "오늘날 세계가 직면한 가장 어려운 문제"의 예로 든 것을 모두 고른 것은?\nㄱ. 암   ㄴ. 전쟁   ㄷ. 기후 변화   ㄹ. 교육 불평등',
       choices: ['ㄱ, ㄴ, ㄷ', 'ㄱ, ㄷ, ㄹ', 'ㄴ, ㄷ, ㄹ', 'ㄱ, ㄴ, ㄹ', 'ㄱ, ㄴ, ㄷ, ㄹ'],
       answer: 1,
       explain: '"everything from cancer to climate change to educational inequality" — 암, 기후 변화, 교육 불평등이 언급되었고 전쟁은 언급되지 않았다.',
     },
     {
-      id: 'm2u05-mc-29', type: 'mc', points: 4,
+      id: 'm2u05-mc-29', type: 'mc', points: 4, sec: 'F', sec: 'F',
       q: '아디치에 연설의 전개 방식으로 가장 적절한 것은?',
       choices: [
         '시간 순서에 따라 개인 경험을 들려준 뒤 조언을 전한다.',
@@ -610,7 +619,7 @@ window.QUNITS['miraen-eng2/u05'] = {
       explain: '성장기 → 의대 진학 → 중퇴 → 미국 유학의 경험을 시간 순으로 말한 뒤, "And as you graduate today..."부터 조언으로 넘어간다.',
     },
     {
-      id: 'm2u05-mc-30', type: 'mc', points: 4,
+      id: 'm2u05-mc-30', type: 'mc', points: 4, sec: 'F', sec: 'F',
       q: '두 연설의 공통점으로 가장 적절한 것은?',
       choices: [
         '둘 다 졸업식 축사에서 발췌한 것이다.',
@@ -623,7 +632,7 @@ window.QUNITS['miraen-eng2/u05'] = {
       explain: '각각 2015년 웰즐리 대학, 2017년 MIT 졸업식 축사에서 발췌한 것이다.',
     },
     {
-      id: 'm2u05-mc-31', type: 'mc', points: 4,
+      id: 'm2u05-mc-31', type: 'mc', points: 4, sec: 'D', sec: 'D',
       q: '팀 쿡에 따르면, 기술이 원하는 것은 무엇인가?',
       choices: [
         '위대한 일을 하는 것',
@@ -636,7 +645,7 @@ window.QUNITS['miraen-eng2/u05'] = {
       explain: '"But it doesn\'t want to do great things. It doesn\'t want anything." — 원하는 것은 사람의 몫이라는 흐름으로 이어진다.',
     },
     {
-      id: 'm2u05-mc-32', type: 'mc', points: 4,
+      id: 'm2u05-mc-32', type: 'mc', points: 4, sec: 'B', sec: 'B',
       q: '아디치에가 "We cannot always bend the world into the shape we want"에 이어서 한 말은?',
       choices: [
         '그러니 일찍 포기하는 것이 낫다.',
@@ -649,14 +658,14 @@ window.QUNITS['miraen-eng2/u05'] = {
       explain: '"but we can make a concerted effort to do the best with the lot we have been given"',
     },
     {
-      id: 'm2u05-mc-33', type: 'mc', points: 4,
+      id: 'm2u05-mc-33', type: 'mc', points: 4, sec: 'F', sec: 'F',
       q: '아디치에 연설의 어조로 가장 적절한 것은?',
       choices: ['냉소적이다', '격려하고 있다', '무관심하다', '분노에 차 있다', '절망적이다'],
       answer: 1,
       explain: '자신의 경험을 바탕으로 졸업생들이 진정 원하는 것을 좇도록 격려하는 어조이다.',
     },
     {
-      id: 'm2u05-mc-34', type: 'mc', points: 4,
+      id: 'm2u05-mc-34', type: 'mc', points: 4, sec: 'V', sec: 'V',
       q: '다음 중 어법상 어색한 문장은?',
       choices: [
         'I was expected to become a doctor.',
@@ -669,7 +678,7 @@ window.QUNITS['miraen-eng2/u05'] = {
       explain: '동명사구 주어(Leaving medical school)는 단수 취급하므로 were가 아니라 was가 되어야 한다.',
     },
     {
-      id: 'm2u05-mc-35', type: 'mc', points: 4,
+      id: 'm2u05-mc-35', type: 'mc', points: 4, sec: 'V', sec: 'V',
       q: '다음 중 어법상 어색한 문장은?',
       choices: [
         'People told me that it had been very courageous of me to give up such an opportunity.',
@@ -682,7 +691,7 @@ window.QUNITS['miraen-eng2/u05'] = {
       explain: '조동사(might) 뒤의 완료형은 have + p.p.이므로 might not have been이 되어야 한다.',
     },
     {
-      id: 'm2u05-mc-36', type: 'mc', points: 4,
+      id: 'm2u05-mc-36', type: 'mc', points: 4, sec: 'V', sec: 'V',
       q: '다음 중 어법상 어색한 문장은?',
       choices: [
         'We can make a concerted effort to doing the best with the lot we have been given.',
@@ -695,7 +704,7 @@ window.QUNITS['miraen-eng2/u05'] = {
       explain: 'effort 뒤에는 to부정사가 오므로 to do the best가 되어야 한다.',
     },
     {
-      id: 'm2u05-mc-37', type: 'mc', points: 4,
+      id: 'm2u05-mc-37', type: 'mc', points: 4, sec: 'V', sec: 'V',
       q: '다음 중 어법상 어색한 문장은?',
       choices: [
         'When you work towards something greater than yourself, you find meaning.',
@@ -708,7 +717,7 @@ window.QUNITS['miraen-eng2/u05'] = {
       explain: '전치사 of 뒤에는 동명사가 오므로 capable of doing great things가 되어야 한다.',
     },
     {
-      id: 'm2u05-mc-38', type: 'mc', points: 4,
+      id: 'm2u05-mc-38', type: 'mc', points: 4, sec: 'V', sec: 'V',
       q: '다음 중 어법상 어색한 문장은?',
       choices: [
         'Technology today is essential to almost all aspects of our lives.',
@@ -721,7 +730,7 @@ window.QUNITS['miraen-eng2/u05'] = {
       explain: '주격 관계대명사 that의 선행사 a technology가 단수이므로 allow가 아니라 allows가 되어야 한다.',
     },
     {
-      id: 'm2u05-mc-39', type: 'mc', points: 4,
+      id: 'm2u05-mc-39', type: 'mc', points: 4, sec: 'V', sec: 'V',
       q: '다음 중 어법상 어색한 문장은?',
       choices: [
         'I\'m not worried about artificial intelligence giving computers the ability to think like humans.',
@@ -734,7 +743,7 @@ window.QUNITS['miraen-eng2/u05'] = {
       explain: 'It is ~ that 강조구문에서 that절의 동사는 강조되는 technology(단수)에 일치시켜 makes가 되어야 한다.',
     },
     {
-      id: 'm2u05-mc-40', type: 'mc', points: 4,
+      id: 'm2u05-mc-40', type: 'mc', points: 4, sec: 'V', sec: 'V',
       q: '다음 괄호 안에서 어법상 알맞은 것끼리 짝지은 것은?\nIt is natural (A)(to start / starting) thinking about your future career. / To prepare for your future job, it is important (B)(explore / to explore) the experiences of role models and (C)(assess / assessing) your own attitudes toward success.',
       choices: [
         '(A) to start – (B) to explore – (C) assess',
@@ -747,42 +756,42 @@ window.QUNITS['miraen-eng2/u05'] = {
       explain: 'it is natural/important 뒤에는 진주어 to부정사가 오고, (C)는 explore와 and로 병렬이므로 원형 assess가 알맞다.',
     },
     {
-      id: 'm2u05-mc-41', type: 'mc', points: 4,
+      id: 'm2u05-mc-41', type: 'mc', points: 4, sec: 'V', sec: 'V',
       q: '다음 영영풀이에 해당하는 단어는?\n"money given to a student to help pay for their education"',
       choices: ['desire', 'scholarship', 'guarantee', 'effort', 'insight'],
       answer: 1,
       explain: '학업 비용을 돕기 위해 학생에게 주는 돈 = scholarship(장학금).',
     },
     {
-      id: 'm2u05-mc-42', type: 'mc', points: 4,
+      id: 'm2u05-mc-42', type: 'mc', points: 4, sec: 'V', sec: 'V',
       q: '다음 영영풀이에 해당하는 단어는?\n"an unfair situation in which some groups have more advantages than others"',
       choices: ['community', 'security', 'inequality', 'humanity', 'decency'],
       answer: 2,
       explain: '일부 집단이 더 많은 이점을 갖는 불공평한 상황 = inequality(불평등).',
     },
     {
-      id: 'm2u05-mc-43', type: 'mc', points: 4,
+      id: 'm2u05-mc-43', type: 'mc', points: 4, sec: 'V', sec: 'V',
       q: '다음 영영풀이에 해당하는 단어는?\n"a feeling of sympathy for the suffering of others"',
       choices: ['consequence', 'commitment', 'privacy', 'compassion', 'progress'],
       answer: 3,
       explain: '타인의 고통에 대한 연민 = compassion.',
     },
     {
-      id: 'm2u05-mc-44', type: 'mc', points: 4,
+      id: 'm2u05-mc-44', type: 'mc', points: 4, sec: 'V', sec: 'V',
       q: '다음 영영풀이에 해당하는 단어는?\n"connected with or related to each other"',
       choices: ['antisocial', 'interconnected', 'multifaceted', 'unintentional', 'courageous'],
       answer: 1,
       explain: '서로 연결된 = interconnected. 본문 "all of our faiths are interconnected".',
     },
     {
-      id: 'm2u05-mc-45', type: 'mc', points: 4,
+      id: 'm2u05-mc-45', type: 'mc', points: 4, sec: 'V', sec: 'V',
       q: '다음 영영풀이에 해당하는 단어는?\n"brave; not afraid of danger or difficulty"',
       choices: ['likeable', 'adverse', 'courageous', 'diverse', 'enormous'],
       answer: 2,
       explain: '용감한 = courageous.',
     },
     {
-      id: 'm2u05-mc-46', type: 'mc', points: 4,
+      id: 'm2u05-mc-46', type: 'mc', points: 4, sec: 'E', sec: 'E',
       q: '"When you keep people at the center of what you do, it can have an enormous impact."에서 it이 가리키는 것은?',
       choices: [
         '사람을 하는 일의 중심에 두는 것',
@@ -795,7 +804,7 @@ window.QUNITS['miraen-eng2/u05'] = {
       explain: 'it은 앞 절의 내용, 즉 "사람을 하는 일의 중심에 두는 것"을 가리킨다.',
     },
     {
-      id: 'm2u05-mc-47', type: 'mc', points: 4,
+      id: 'm2u05-mc-47', type: 'mc', points: 4, sec: 'C', sec: 'C',
       q: '"Don\'t do it."에서 it이 가리키는 것은?',
       choices: [
         '학교를 졸업하는 것',
@@ -808,7 +817,7 @@ window.QUNITS['miraen-eng2/u05'] = {
       explain: '앞 문장 "Please do not twist yourself into shapes to please others."의 내용을 가리킨다.',
     },
     {
-      id: 'm2u05-mc-48', type: 'mc', points: 4,
+      id: 'm2u05-mc-48', type: 'mc', points: 4, sec: 'D', sec: 'D',
       q: '"then technology will help us do it"에서 it이 가리키는 것은?',
       choices: [
         '대학을 졸업하는 것',
@@ -821,7 +830,7 @@ window.QUNITS['miraen-eng2/u05'] = {
       explain: '같은 문장 앞부분 "solve some of the hardest problems still facing the world today"를 가리킨다.',
     },
     {
-      id: 'm2u05-mc-49', type: 'mc', points: 4,
+      id: 'm2u05-mc-49', type: 'mc', points: 4, sec: 'C', sec: 'C',
       q: '아디치에가 "있는 그대로의 당신을 좋아해 줄 사람들이 있다"고 말할 수 있는 근거는?',
       choices: [
         '모든 사람이 본래 착하기 때문',
@@ -834,7 +843,7 @@ window.QUNITS['miraen-eng2/u05'] = {
       explain: '"the world is such a gloriously multifaceted, diverse place that there are people... who will like you, the real you, as you are."',
     },
     {
-      id: 'm2u05-mc-50', type: 'mc', points: 4,
+      id: 'm2u05-mc-50', type: 'mc', points: 4, sec: 'E', sec: 'E',
       q: '팀 쿡이 가장 걱정한다고 말한 것은?',
       choices: [
         '컴퓨터가 인간처럼 생각하게 되는 것',
@@ -848,122 +857,122 @@ window.QUNITS['miraen-eng2/u05'] = {
     },
     /* ══ 교과서 확인문제 (Q1은 사진 미확보로 보류) ══ */
     {
-      id: 'm2u05-tb-02', type: 'short', points: 4,
+      id: 'm2u05-tb-02', type: 'short', points: 4, sec: 'B', sec: 'B',
       q: '[교과서 Q2] 본문 내용과 일치하면 T, 틀리면 F를 쓰시오.\nThe speaker wanted to study medicine in America when she considered studying abroad. (T / F)',
       answer: 'F',
       explain: '아디치에는 미국에서 의학과 관련 없는(not related to medicine) 다른 것을 공부하고자 했다.',
     },
     {
-      id: 'm2u05-tb-03', type: 'short', points: 4,
+      id: 'm2u05-tb-03', type: 'short', points: 4, sec: 'C', sec: 'C',
       q: '[교과서 Q3] 괄호 안에서 알맞은 것을 고르시오.\nThe speaker encourages students to think about what matters to (themselves / others).',
       answer: 'themselves',
       explain: '"Think about what really matters to you." — 화자는 자신에게 중요한 것을 생각하라고 권한다.',
     },
     {
-      id: 'm2u05-tb-04', type: 'short', points: 6,
+      id: 'm2u05-tb-04', type: 'short', points: 6, sec: 'F', sec: 'F',
       q: '[교과서 Q4 · Thinking Critically] Which would you choose between what you like and what you are good at? Why? (영어로 자유롭게 답하시오)',
       answer: '(예시) I would choose what I like, because like the speaker, I believe following my true desire matters more than pleasing others.',
       explain: '자유 응답 문항. 자신의 선택과 이유가 논리적으로 연결되면 정답으로 인정.',
     },
     {
-      id: 'm2u05-tb-05', type: 'short', points: 4,
+      id: 'm2u05-tb-05', type: 'short', points: 4, sec: 'D', sec: 'D',
       q: '[교과서 Q5] What does "it" refer to?\n(※ "most of the time it\'s a force for good."의 it)',
       answer: 'technology (today)',
       explain: '"Technology today is essential to almost all aspects of our lives, and most of the time it\'s a force for good."에서 it은 앞의 technology (today)를 가리킨다.',
     },
     {
-      id: 'm2u05-tb-06', type: 'short', points: 4,
+      id: 'm2u05-tb-06', type: 'short', points: 4, sec: 'E', sec: 'E',
       q: '[교과서 Q6] 본문 내용과 일치하면 T, 틀리면 F를 쓰시오.\nThe speaker is concerned more about humans thinking like computers than computers thinking like humans. (T / F)',
       answer: 'T',
       explain: '"I\'m not worried about artificial intelligence... I\'m more concerned about people thinking like computers..."와 일치한다.',
     },
     {
-      id: 'm2u05-tb-07', type: 'short', points: 6,
+      id: 'm2u05-tb-07', type: 'short', points: 6, sec: 'E', sec: 'E',
       q: '[교과서 Q7] Identify the main ideas in the last paragraph and fill in the blanks with the key words.\n________ is not sufficient. It should be combined with liberal arts and ________ to make progress possible for everyone.',
       answer: 'Technology / (the) humanities',
       explain: '마지막 문단 요지: 기술만으로는 충분하지 않고, 인문교양·인문학과 결합되어야 모두의 발전이 가능하다.',
     },
     /* ══ 서술형 — 클로드 출제 ══ */
     {
-      id: 'm2u05-sh-01', type: 'short', points: 6,
+      id: 'm2u05-sh-01', type: 'short', points: 6, sec: 'V', sec: 'V',
       q: '다음 표현을 모두 한 번씩 사용하여 우리말과 같은 뜻이 되도록 문장을 완성하시오.\n"마음 깊은 곳에서 나는 내가 정말 하고 싶은 일이 이야기를 쓰는 것임을 알고 있었다."\n( Deep down / I knew / that / what I really wanted to do / was / to write stories )',
       answer: 'Deep down I knew that what I really wanted to do was to write stories.',
       explain: '관계대명사 what이 이끄는 명사절(what I really wanted to do)이 that절의 주어이다.',
     },
     {
-      id: 'm2u05-sh-02', type: 'short', points: 6,
+      id: 'm2u05-sh-02', type: 'short', points: 6, sec: 'V', sec: 'V',
       q: '다음 표현을 모두 한 번씩 사용하여 우리말과 같은 뜻이 되도록 문장을 완성하시오.\n"때로는 우리를 연결해 주기로 되어 있는 바로 그 기술이 우리를 갈라놓는다."\n( Sometimes / the very technology / that is meant to / connect us / divides us )',
       answer: 'Sometimes the very technology that is meant to connect us divides us.',
       explain: 'the very + 명사(바로 그 ~), be meant to-V(~하기로 되어 있다). 주어는 the very technology이므로 동사는 divides.',
     },
     {
-      id: 'm2u05-sh-03', type: 'short', points: 4,
+      id: 'm2u05-sh-03', type: 'short', points: 4, sec: 'B', sec: 'B',
       q: '다음 영영풀이에 해당하는 단어를 본문에서 찾아 쓰시오.\n"a strong feeling of wanting to have or do something"',
       answer: 'desire',
       explain: '무언가를 갖거나 하고 싶은 강한 감정 = desire(열망). "I felt desire."',
     },
     {
-      id: 'm2u05-sh-04', type: 'short', points: 4,
+      id: 'm2u05-sh-04', type: 'short', points: 4, sec: 'E', sec: 'E',
       q: '다음 영영풀이에 해당하는 단어를 본문에서 찾아 쓰시오. (복수형 1단어)\n"studies about human culture, such as literature, history, and philosophy"',
       answer: 'humanities',
       explain: '문학·역사·철학 등 인간 문화에 대한 학문 = (the) humanities(인문학).',
     },
     {
-      id: 'm2u05-sh-05', type: 'short', points: 6,
+      id: 'm2u05-sh-05', type: 'short', points: 6, sec: 'V', sec: 'V',
       q: '다음 문장에서 어법상 틀린 부분을 찾아 바르게 고치시오.\nIt was after one year of medical school when I quit.',
       answer: 'when → that',
       explain: 'It ~ that 강조구문. 부사구(after one year of medical school)를 강조할 때에도 that을 쓴다. 본문: "it was after one year of medical school that I quit."',
     },
     {
-      id: 'm2u05-sh-06', type: 'short', points: 6,
+      id: 'm2u05-sh-06', type: 'short', points: 6, sec: 'V', sec: 'V',
       q: '다음 문장에서 어법상 틀린 부분을 찾아 바르게 고치시오.\nThanks to discoveries making right here, billions of people are leading healthier, more productive, more fulfilling lives.',
       answer: 'making → made',
       explain: 'discoveries는 "만들어진" 대상이므로 과거분사 made가 수식해야 한다. 본문: "Thanks to discoveries made right here".',
     },
     {
-      id: 'm2u05-sh-07', type: 'short', points: 6,
+      id: 'm2u05-sh-07', type: 'short', points: 6, sec: 'V', sec: 'V',
       q: '다음 표현을 모두 한 번씩 사용하여 우리말과 같은 뜻이 되도록 문장을 완성하시오.\n"졸업식 축사는 젊은이들에게 어려움을 상기시킬 뿐 아니라, 진로에 대한 통찰도 제공한다."\n( The commencement address / not only / reminds young people of / the challenges / but also / offers insights / for their career paths )',
       answer: 'The commencement address not only reminds young people of the challenges but also offers insights for their career paths.',
       explain: '"not only A but also B" 상관접속사 구문. remind A of B(A에게 B를 상기시키다).',
     },
     {
-      id: 'm2u05-sh-08', type: 'short', points: 6,
+      id: 'm2u05-sh-08', type: 'short', points: 6, sec: 'V', sec: 'V',
       q: '우리말과 같은 뜻이 되도록 It ~ that 강조구문을 사용하여 문장을 완성하시오.\n"우리의 가슴을 노래하게 하는 것은 바로 인문학과 결합된 기술이다."\n(technology married with the humanities, makes our hearts sing 사용)',
       answer: 'It is technology married with the humanities that makes our hearts sing.',
       explain: '주어를 강조하는 It is ~ that 구문. 강조 대상이 technology(단수)이므로 that절 동사는 makes.',
     },
     {
-      id: 'm2u05-sh-09', type: 'short', points: 4,
+      id: 'm2u05-sh-09', type: 'short', points: 4, sec: 'V', sec: 'V',
       q: '본문 내용과 같도록 빈칸에 알맞은 말을 쓰시오. (2단어)\nAll over the world, people ________ ________ to make themselves likeable and to twist themselves into shapes that suit other people.',
       answer: 'are raised',
       explain: 'raise(기르다)의 수동태. 사람들이 "길러진다"는 의미이므로 are raised.',
     },
     {
-      id: 'm2u05-sh-10', type: 'short', points: 6,
+      id: 'm2u05-sh-10', type: 'short', points: 6, sec: 'E', sec: 'E',
       q: '"That is what we need you to help us guard against."에서 That이 가리키는 내용을 우리말로 쓰시오.',
       answer: '사람들이 가치관이나 연민 없이, 결과에 대한 걱정 없이 컴퓨터처럼 생각하는 것',
       explain: '앞 문장 "people thinking like computers, without values or compassion, without concern for consequences"를 가리킨다.',
     },
     {
-      id: 'm2u05-sh-11', type: 'short', points: 6,
+      id: 'm2u05-sh-11', type: 'short', points: 6, sec: 'F', sec: 'F',
       q: '아디치에 연설의 내용과 같도록 빈칸 (A), (B)에 알맞은 단어를 본문에서 찾아 쓰시오.\nThe speaker gave up studying (A)________ and chose to follow her (B)________ to study what she loves.',
       answer: '(A) medicine (B) desire',
       explain: '의학 공부(medicine)를 포기하고, 사랑하는 것을 공부하고 싶은 열망(desire)을 따랐다.',
     },
     {
-      id: 'm2u05-sh-12', type: 'short', points: 6,
+      id: 'm2u05-sh-12', type: 'short', points: 6, sec: 'V', sec: 'V',
       q: '다음 표현을 모두 한 번씩 사용하여 우리말과 같은 뜻이 되도록 문장을 완성하시오.\n"의대를 그만두는 것은, 특히 나이지리아에서는, 매우 이례적인 결정이었다."\n( Leaving medical school / was / a very unusual decision / especially / in Nigeria )',
       answer: 'Leaving medical school was a very unusual decision, especially in Nigeria.',
       explain: '동명사구(Leaving medical school)가 주어로 단수 취급되어 was가 온다.',
     },
     {
-      id: 'm2u05-sh-13', type: 'short', points: 6,
+      id: 'm2u05-sh-13', type: 'short', points: 6, sec: 'E', sec: 'E',
       q: '팀 쿡이 말한 "사람을 중심에 둔 기술"의 두 가지 예를 우리말로 쓰시오.',
       answer: '① 시각장애인이 마라톤을 뛸 수 있게 해 주는 기술 ② 심장 질환을 심장 마비가 되기 전에 발견하는 기술',
       explain: '"a technology that allows the blind person to run a marathon and catches a heart condition before it becomes a heart attack"',
     },
     {
-      id: 'm2u05-sh-14', type: 'short', points: 6,
+      id: 'm2u05-sh-14', type: 'short', points: 6, sec: 'V', sec: 'V',
       q: '다음 문장에서 어법상 틀린 부분을 찾아 바르게 고치시오.\nI\'m more concerned about people to think like computers.',
       answer: 'to think → thinking',
       explain: '전치사 about의 목적어 people 뒤에서 동명사(현재분사) thinking이 이어져야 한다. 본문: "concerned about people thinking like computers".',

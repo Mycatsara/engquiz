@@ -91,6 +91,22 @@ window.QREG.profiles.forEach((p) => {
     ok(!!d, tag + ' 데이터 로드');
     if (!d) return;
     ok(d.passage.length >= 1 && d.passage.every((s) => s.en && s.ko), tag + ' 본문 en/ko 완비');
+    if (d.sections) {
+      // 구간: 서로 이어지고, 본문 전체를 빈틈없이 덮어야 한다
+      let prev = -1;
+      d.sections.forEach((s) => {
+        ok(s.id && s.label, tag + ' 구간 id/label 존재');
+        ok(Number.isInteger(s.start) && Number.isInteger(s.end) &&
+          s.start === prev + 1 && s.end >= s.start && s.end < d.passage.length,
+          tag + ' 구간 ' + s.id + ' 연속·범위 유효');
+        prev = s.end;
+      });
+      ok(prev === d.passage.length - 1, tag + ' 구간이 본문 전체를 덮음');
+      const secIds = new Set(d.sections.map((s) => s.id).concat(['F', 'V']));
+      d.bank.forEach((q) => {
+        ok(secIds.has(q.sec), tag + ' ' + q.id + ' sec 값 유효 (' + q.sec + ')');
+      });
+    }
     ok(d.words.length >= 1 && d.words.every((w) => w.en && w.ko), tag + ' 단어 en/ko 완비');
     const ids = d.bank.map((q) => q.id);
     ok(new Set(ids).size === ids.length, tag + ' 문항 id 중복 없음');
