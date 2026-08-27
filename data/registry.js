@@ -3,6 +3,15 @@
 window.QREG = {
   profiles: [
     {
+      id: 'miraen-eng2',
+      label: '미래엔 고등 영어Ⅱ (김성연 외)',
+      publisher: '미래엔',
+      grade: '고2·고3',
+      units: [
+        { id: 'u05', label: '5과 Inspiring Words for Moving Forward', file: 'u05.js' },
+      ],
+    },
+    {
       id: 'sample-high',
       label: '샘플 교과서 (고1·고2) — 자작 지문 데모',
       publisher: '샘플',
