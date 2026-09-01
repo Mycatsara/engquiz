@@ -24,16 +24,16 @@ window.QUNITS['nunggok-hs1/l01'] = {
       body: '관심사를 꼭 하나만 고를 필요는 없다(You don\'t have to pick just one). 서로 달라 보이는 조각들의 교차점(intersection)을 찾고 눈과 귀를 열어 두면 새로운 기회가 열린다.',
     },
     {
-      title: '글의 구조',
-      body: '① [3:56] 예술(1~7): 우연한 미술 수업 → 예술은 실험적일 수 있다 → 스스로를 예술가로 보게 됨\n② [4:51] 기술(8~16): 호기심으로 택한 컴퓨터과학 전공, 소속감 부족, 전공 밖 과목 수강을 도피로 여김\n③ [5:58] 고민(17~21): 첫 직장에서 매니저에게 의심과 망설임을 털어놓음, 감사하면서도 죄책감\n④ [6:58~7:30] 전환점(22~28): 기술 진로는 여러 모습 — "하나만 고를 필요 없다"에 충격\n⑤ [7:54~8:24] 재발견(29~41): 두 개의 거품 → 교차점 찾기로 결심, 홈비디오에서 이야기 사랑 재발견\n⑥ [9:32~10:03] 아하 모먼트(42~51): 예술+기술+이야기 = 스토리텔링, 우연히 알게 된 테크니컬 디렉터, 삶의 조각 연결은 누구에게나 일어나는 일',
+      title: '글의 구조 (이야기 흐름)',
+      body: '① 예술과의 만남 — 우연히 들은 고등학교 미술 수업에서 "예술은 완벽하지 않아도 된다"는 걸 깨닫고, 스스로를 예술가로 보기 시작한다.\n\n② 기술과의 만남 — 호기심으로 컴퓨터과학을 전공하지만 그 공간에 완전히 속한 느낌은 없었고, 창의적 욕구를 채우려 전공 밖 과목(시나리오 작문·그래픽 디자인 등)을 찾아 듣는다. 당시엔 그걸 "도피"라고 생각했다.\n\n③ 고민 — 첫 직장(소프트웨어 엔지니어)에서 매니저에게 고민을 털어놓는다. 좋은 직장에 감사하면서도 더 많은 걸 원하는 자신에게 죄책감을 느낀다.\n\n④ 전환점 — 매니저의 말: 기술 분야의 진로는 여러 모습이 있다. "꼭 하나만 고를 필요는 없어." 이 말에 큰 충격을 받는다.\n\n⑤ 재발견 — 부모님과 함께 옛 홈비디오를 보다가, 세 살 때부터 이야기를 사랑해 온 자신의 본모습을 재발견한다.\n\n⑥ 아하 모먼트 — 예술 + 기술 + 이야기 = 스토리텔링. 우연히 들어간 디즈니 온라인 대화에서 "테크니컬 디렉터"라는 직무를 알게 된다. 삶의 조각을 연결하는 일은 누구에게나 일어난다.',
     },
     {
       title: '핵심 구문',
-      body: '· 3번: It wasn\'t until ~ that ... — ~하고 나서야 비로소 …했다 (강조구문)\n· 6번: seeing myself as an artist — see A as B(A를 B로 여기다)\n· 9번: less so because A, but rather because B — A라서가 아니라 오히려 B라서\n· 11번: the way my classes challenged me — the way + 절(~하는 방식) / feel like + 절\n· 12번: found myself constantly taking ~ — find oneself -ing(어느새 ~하고 있다)\n· 17번: It wasn\'t until well into my first job that ~ — 강조구문\n· 19번: made it clear that ~ — 가목적어 it / whether A or B(A든 B든)\n· 20번: couldn\'t help but feel guilty — cannot help but + 동사원형(~하지 않을 수 없다)\n· 23번: Some ~, some ~ — 어떤 이는 ~, 어떤 이는 ~ (대구)\n· 31번: became set on finding ~ — be set on -ing(~하기로 굳게 결심하다)\n· 39번: has always stayed with me — 현재완료(계속)\n· 48번: If I had logged on ~, I would have missed ~ — 가정법 과거완료(과거 사실의 반대)\n· 50번: is by no means applicable to ~ — by no means(결코 ~않다) 부정 표현',
+      body: '1. It wasn\'t until ~ that ... — "~하고 나서야 비로소 …했다".\n예: It wasn\'t until the accidental enrollment in the high school art class that I realized ~ (미술 수업에 우연히 등록하고 나서야 깨달았다)\n\n2. see A as B — "A를 B로 여기다/보다".\n예: I started seeing myself as an artist. (나 자신을 예술가로 보기 시작했다)\n\n3. find oneself -ing — "어느새 ~하고 있는 자신을 발견하다".\n예: I found myself constantly taking courses outside of my major. (어느새 전공 밖 과목을 계속 듣고 있었다)\n\n4. make it clear that ~ — "~라는 것을 분명히 하다" (it은 가목적어).\n예: He made it clear that his job was to help me. (그는 자신의 일이 나를 돕는 것임을 분명히 했다)\n\n5. cannot help but + 동사원형 — "~하지 않을 수 없다".\n예: I couldn\'t help but feel guilty. (죄책감을 느끼지 않을 수 없었다)\n\n6. 가정법 과거완료 — "만약 ~했다면 …했을 것이다" (과거 사실의 반대).\n예: If I had logged on just 2 minutes later, I would have missed it. (2분만 늦게 접속했다면 놓쳤을 것이다)\n\n7. be set on -ing — "~하기로 굳게 결심하다".\n예: I became set on finding the intersection between the two. (둘의 교차점을 찾기로 결심했다)\n\n8. by no means — "결코 ~이 아니다".\n예: This is by no means applicable to only my life. (이것은 결코 내 삶에만 해당되는 것이 아니다)\n\n9. Some ~, some ~ — "어떤 이는 ~하고, 어떤 이는 ~한다".\n예: Some like to dig deep into code, some like to interact with people. (어떤 이는 코드를 파고들고, 어떤 이는 사람들과 소통한다)',
     },
     {
-      title: '자주 나오는 포인트',
-      body: '· 전공 선택 이유: 열정과 맞아서 (X) → 커다란 물음표 같아 호기심이 생겨서 (O)\n· 전공 밖 수강 과목 4가지: 시나리오 작문·그래픽 디자인·라이브 공연·철학 (회계학은 아님)\n· 매니저의 핵심 조언: "You don\'t have to pick just one."\n· 부모님의 역할: 미래가 아니라 과거를 보게 함 → 세 살 홈비디오\n· 공식: ART + TECHNOLOGY + STORIES = storytelling\n· 마지막 교훈: 조각을 모아 새것을 만드는 일은 누구에게나(all around us) 일어난다',
+      title: '자주 나오는 포인트 (함정 주의)',
+      body: '1. 전공을 고른 이유 — "열정과 맞아서"가 아니라 "커다란 물음표처럼 느껴져 호기심이 생겨서". 시험에서는 이유를 바꿔서 틀리게 낸다.\n\n2. 전공 밖에서 들은 과목 — 시나리오 작문, 그래픽 디자인, 라이브 공연, 철학. "회계학"은 듣지 않았다(뒤에서 가정의 예시로만 등장).\n\n3. 매니저의 핵심 한마디 — "You don\'t have to pick just one." (꼭 하나만 고를 필요 없다)\n\n4. 부모님의 역할 — 미래를 보게 한 게 아니라 "과거"를 보게 했다 → 그래서 세 살 때 홈비디오를 발견.\n\n5. 마지막 공식 — 예술 + 기술 + 이야기 = 스토리텔링. 그리고 화자가 얻은 직무는 처음 들어본 "테크니컬 디렉터".\n\n6. 결론 — 삶의 조각을 모아 새로운 것을 만드는 일은 화자만의 이야기가 아니라 누구에게나, 늘 일어나는 일이다.',
     },
   ],
   passage: [
