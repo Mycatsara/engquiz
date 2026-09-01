@@ -3,6 +3,15 @@
 window.QREG = {
   profiles: [
     {
+      id: 'nunggok-hs1',
+      label: '능곡고 1학년 — 학교 학습지',
+      publisher: '능곡고등학교',
+      grade: '고1',
+      units: [
+        { id: 'l01', label: 'L1 Connecting Amy\'s Dots', file: 'l01.js' },
+      ],
+    },
+    {
       id: 'miraen-eng2',
       label: '미래엔 고등 영어Ⅱ (김성연 외)',
       publisher: '미래엔',
