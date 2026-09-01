@@ -79,6 +79,7 @@ button.primary:hover { background: #c92c39; }
   font-size: 13px;
 }
 .actionbar button:hover { background: #f1f5f9; }
+.print-tip { font-size: 12px; color: #64748b; align-self: center; }
 
 main { padding: 14px 20px 40px; }
 .empty { text-align: center; color: #64748b; margin-top: 40px; }
@@ -113,6 +114,8 @@ main { padding: 14px 20px 40px; }
   padding: 14px 16px;
   margin-bottom: 18px;
   font-size: 14.5px;
+  page-break-inside: avoid;
+  break-inside: avoid;
 }
 .passage-box .direction { font-weight: 700; margin-bottom: 8px; font-size: 14px; }
 
@@ -122,10 +125,14 @@ main { padding: 14px 20px 40px; }
   margin: 22px 0 12px;
   padding-top: 10px;
   border-top: 1px dashed #999;
+  page-break-after: avoid;
+  break-after: avoid;
 }
 .sec-head { margin: 18px 0 8px; font-size: 15px; color: #1d3557; }
 
-.q-item { margin-bottom: 18px; page-break-inside: avoid; font-size: 15px; }
+.q-item { margin-bottom: 18px; page-break-inside: avoid; break-inside: avoid; font-size: 15px; }
+.cloze-line { break-inside: avoid; }
+.a-item { break-inside: avoid; }
 .q-item .q-text { font-weight: 600; white-space: pre-line; }
 .q-item .q-num { font-weight: 800; margin-right: 4px; }
 .q-item .pts { font-size: 12px; color: #666; font-weight: 400; }
