@@ -13,6 +13,29 @@ window.QUNITS['miraen-eng2/u05'] = {
     { id: 'D', label: '연설 2 전반 (팀 쿡 — 기술의 명과 암)', start: 32, end: 47 },
     { id: 'E', label: '연설 2 후반 (팀 쿡 — 기술과 인문학)', start: 48, end: 55 },
   ],
+  /* 지문 분석 — 문장 번호는 "본문 보기" 탭의 번호 기준 */
+  analysis: [
+    {
+      title: '주제',
+      body: '졸업을 앞둔 젊은이들에게 두 명사가 전하는 삶과 진로에 대한 조언. 아디치에는 "남이 아닌 나를 위한 선택"을, 팀 쿡은 "기술과 인문학의 결합"을 말한다.',
+    },
+    {
+      title: '요지 (연설별)',
+      body: '· 아디치에: 남을 기쁘게 하려고 자신을 비틀지 말고, 진정 원하는 것(desire)을 좇아라. 시도 자체에 의미가 있다.\n· 팀 쿡: 기술만으로는 충분하지 않다. 가치관·연민·인문학과 결합될 때 기술은 모두를 위한 발전을 만든다.',
+    },
+    {
+      title: '글의 구조',
+      body: '① 도입(1~7): 졸업식 축사의 정의와 의의, 이어질 두 연설 소개\n② 연설 1 전반(9~23): 아디치에의 경험 — 의대 진학과 중퇴, 열망을 따른 미국 유학, "나는 시도했다"\n③ 연설 1 후반(24~32): 조언 — 남에게 맞춰 자신을 비틀지 마라, 있는 그대로의 너를 좋아할 사람들이 있다\n④ 연설 2 전반(34~48): 팀 쿡 — 기술의 힘과 그늘(보안·사생활·가짜 뉴스), 기술은 아무것도 원하지 않으며 그 몫은 사람에게 있다\n⑤ 연설 2 후반(49~56): 인문학이라는 촛불, 인문학과 결합된 기술이 모두의 발전을 만든다',
+    },
+    {
+      title: '핵심 구문',
+      body: '· 2번: a notable or famous person who is invited ~ — 주격 관계대명사 who / offering advice ~는 분사구문(~하면서)\n· 5번: it is important to explore ~ and (to) assess ~ — 가주어 it, 진주어 to부정사, explore·assess 병렬\n· 6번: not only A but also B — A뿐 아니라 B도 / remind A of B\n· 10번: what I really wanted to do was to write stories — 관계대명사 what 명사절이 주어, to write가 보어\n· 13번: It was after one year of medical school that I quit — It ~ that 강조구문(부사구 강조)\n· 15번: Leaving medical school was ~ — 동명사구 주어는 단수 취급 / , where ~는 계속적 용법(그런데 그곳에서는)\n· 16번: it had been very courageous of me to give up — 사람의 성질 형용사 + of + 목적격\n· 23번: cannot always ~ — 부분 부정(항상 ~할 수 있는 것은 아니다) / the lot (that) we have been given — 목적격 관계대명사 생략\n· 27번: people are raised to make ~ — 수동태 + to부정사 / shapes that suit other people — 주격 관계대명사\n· 32번: such a ~ place that ... — so/such ~ that 구문(너무 ~해서 …하다)\n· 37번: how much science and technology have changed — 간접의문문 어순, 복수 주어 have\n· 44번: the very technology that ~ — the very + 명사(바로 그 ~)\n· 52번: It is technology married with ~ that makes our hearts sing — It ~ that 강조구문(주어 강조), married with는 과거분사 수식\n· 54번: allows the blind person to run ~ and catches ~ — allow + 목적어 + to부정사, allows·catches 병렬',
+    },
+    {
+      title: '자주 나오는 포인트',
+      body: '· 아디치에가 느낀 것은 용기(courage)가 아니라 열망(desire) — T/F·내용일치 단골\n· 미국에서 공부한 것은 의학과 관련 없는(not related to medicine) 분야\n· 팀 쿡이 걱정하는 것: 컴퓨터가 인간처럼 (X) → 사람이 컴퓨터처럼 생각하는 것 (O)\n· 기술의 부정적 측면 4가지: 보안 위협·사생활 위협·가짜 뉴스·반사회적 소셜 미디어\n· 과학 = 어둠 속의 탐색, 인문학 = 촛불(과거와 위험을 비춤) 비유',
+    },
+  ],
   passage: [
     { en: 'A commencement address is a speech given at a school graduation ceremony.',
       ko: '졸업식 축사는 학교 졸업식에서 하는 연설이다.' },

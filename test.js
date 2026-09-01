@@ -108,6 +108,11 @@ window.QREG.profiles.forEach((p) => {
       });
     }
     ok(d.words.length >= 1 && d.words.every((w) => w.en && w.ko), tag + ' 단어 en/ko 완비');
+    if (d.analysis) {
+      ok(Array.isArray(d.analysis) && d.analysis.length >= 1 &&
+        d.analysis.every((a) => typeof a.title === 'string' && a.title.trim() && typeof a.body === 'string' && a.body.trim()),
+        tag + ' 지문 분석 title/body 완비');
+    }
     const ids = d.bank.map((q) => q.id);
     ok(new Set(ids).size === ids.length, tag + ' 문항 id 중복 없음');
     d.bank.forEach((q) => {

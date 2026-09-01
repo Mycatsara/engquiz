@@ -13,6 +13,29 @@ window.QUNITS['nunggok-hs1/l01'] = {
     { id: 'S5', label: '[7:54~8:24] 교차점과 홈비디오', start: 28, end: 40 },
     { id: 'S6', label: '[9:32~10:03] 아하 모먼트와 기회', start: 41, end: 50 },
   ],
+  /* 지문 분석 — 문장 번호는 "본문 보기" 탭의 번호 기준 */
+  analysis: [
+    {
+      title: '주제',
+      body: '예술에 대한 관심, 기술 전공, 이야기에 대한 사랑이라는 삶의 조각들을 연결해 자신만의 진로(테크니컬 디렉터)를 찾은 Amy의 이야기.',
+    },
+    {
+      title: '요지',
+      body: '관심사를 꼭 하나만 고를 필요는 없다(You don\'t have to pick just one). 서로 달라 보이는 조각들의 교차점(intersection)을 찾고 눈과 귀를 열어 두면 새로운 기회가 열린다.',
+    },
+    {
+      title: '글의 구조',
+      body: '① [3:56] 예술(1~7): 우연한 미술 수업 → 예술은 실험적일 수 있다 → 스스로를 예술가로 보게 됨\n② [4:51] 기술(8~16): 호기심으로 택한 컴퓨터과학 전공, 소속감 부족, 전공 밖 과목 수강을 도피로 여김\n③ [5:58] 고민(17~21): 첫 직장에서 매니저에게 의심과 망설임을 털어놓음, 감사하면서도 죄책감\n④ [6:58~7:30] 전환점(22~28): 기술 진로는 여러 모습 — "하나만 고를 필요 없다"에 충격\n⑤ [7:54~8:24] 재발견(29~41): 두 개의 거품 → 교차점 찾기로 결심, 홈비디오에서 이야기 사랑 재발견\n⑥ [9:32~10:03] 아하 모먼트(42~51): 예술+기술+이야기 = 스토리텔링, 우연히 알게 된 테크니컬 디렉터, 삶의 조각 연결은 누구에게나 일어나는 일',
+    },
+    {
+      title: '핵심 구문',
+      body: '· 3번: It wasn\'t until ~ that ... — ~하고 나서야 비로소 …했다 (강조구문)\n· 6번: seeing myself as an artist — see A as B(A를 B로 여기다)\n· 9번: less so because A, but rather because B — A라서가 아니라 오히려 B라서\n· 11번: the way my classes challenged me — the way + 절(~하는 방식) / feel like + 절\n· 12번: found myself constantly taking ~ — find oneself -ing(어느새 ~하고 있다)\n· 17번: It wasn\'t until well into my first job that ~ — 강조구문\n· 19번: made it clear that ~ — 가목적어 it / whether A or B(A든 B든)\n· 20번: couldn\'t help but feel guilty — cannot help but + 동사원형(~하지 않을 수 없다)\n· 23번: Some ~, some ~ — 어떤 이는 ~, 어떤 이는 ~ (대구)\n· 31번: became set on finding ~ — be set on -ing(~하기로 굳게 결심하다)\n· 39번: has always stayed with me — 현재완료(계속)\n· 48번: If I had logged on ~, I would have missed ~ — 가정법 과거완료(과거 사실의 반대)\n· 50번: is by no means applicable to ~ — by no means(결코 ~않다) 부정 표현',
+    },
+    {
+      title: '자주 나오는 포인트',
+      body: '· 전공 선택 이유: 열정과 맞아서 (X) → 커다란 물음표 같아 호기심이 생겨서 (O)\n· 전공 밖 수강 과목 4가지: 시나리오 작문·그래픽 디자인·라이브 공연·철학 (회계학은 아님)\n· 매니저의 핵심 조언: "You don\'t have to pick just one."\n· 부모님의 역할: 미래가 아니라 과거를 보게 함 → 세 살 홈비디오\n· 공식: ART + TECHNOLOGY + STORIES = storytelling\n· 마지막 교훈: 조각을 모아 새것을 만드는 일은 누구에게나(all around us) 일어난다',
+    },
+  ],
   passage: [
     { en: 'Looking back I can almost pinpoint the moment that my mindset shifted with respect to art.',
       ko: '돌이켜보면, 예술에 대한 제 생각이 바뀐 순간을 거의 정확히 짚어낼 수 있습니다.' },

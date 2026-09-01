@@ -55,6 +55,7 @@
   function onUnitReady() {
     if (!unitData) return;
     if (currentTab === 'passage') renderPassage();
+    if (currentTab === 'analysis') renderAnalysis();
   }
 
   /* ── 공통 렌더 ─────────────────── */
@@ -123,10 +124,11 @@
     q += `<table class="word-table"><tr><th>번호</th><th>문제</th><th>답</th></tr>`;
     let a = sheetHead(title + ' — 정답');
     items.forEach((it, i) => {
-      q += `<tr><td class="no">${i + 1}</td><td>${esc(it.prompt)}</td><td class="ans"></td></tr>`;
+      q += `<tr><td class="no">${i + 1}</td><td>${esc(it.prompt)}</td><td class="ans word-ans" data-ans="${esc(it.answer)}"></td></tr>`;
       a += `<div class="a-item"><b>${i + 1}.</b> ${esc(it.prompt)} → <span class="a-ans">${esc(it.answer)}</span></div>`;
     });
     q += `</table>`;
+    q += `<p class="no-print" style="margin-top:8px;font-size:12px;color:#64748b">💡 화면에서 답 칸을 누르면 정답이 보입니다 (다시 누르면 숨김 · 인쇄에는 나오지 않음)</p>`;
     showSheets(q, a);
   }
 
@@ -201,7 +203,21 @@
     return { qh: qh, ah: ah };
   }
 
-  /* ── 4. 본문 보기 ─────────────────── */
+  /* ── 4. 지문 분석 ─────────────────── */
+  function renderAnalysis() {
+    const noAns = sheetHead('지문 분석') + '<p>정답지가 따로 없는 자료입니다.</p>';
+    if (!Array.isArray(unitData.analysis) || !unitData.analysis.length) {
+      showSheets(sheetHead('지문 분석') + '<p>이 단원에는 아직 지문 분석 자료가 없습니다.</p>', noAns);
+      return;
+    }
+    let q = sheetHead('지문 분석');
+    unitData.analysis.forEach((a) => {
+      q += `<h3 class="sec-head">${esc(a.title)}</h3><div class="ana-body">${esc(a.body)}</div>`;
+    });
+    showSheets(q, noAns);
+  }
+
+  /* ── 5. 본문 보기 ─────────────────── */
   function renderPassage() {
     const showKo = $('passKo').checked;
     let q = sheetHead('본문 전체');
@@ -227,6 +243,18 @@
     $('opt-' + currentTab).classList.remove('hidden');
     clearSheets();
     if (currentTab === 'passage' && unitData) renderPassage();
+    if (currentTab === 'analysis' && unitData) renderAnalysis();
+  });
+
+  // 단어 시험: 화면에서 답 칸 클릭 → 정답 표시/숨김
+  $('sheetQ').addEventListener('click', (e) => {
+    const td = e.target.closest('td.word-ans');
+    if (!td) return;
+    if (td.firstChild) { td.innerHTML = ''; return; }
+    const span = document.createElement('span');
+    span.className = 'revealed';
+    span.textContent = td.dataset.ans;
+    td.appendChild(span);
   });
 
   function guard(fn) {

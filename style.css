@@ -113,15 +113,15 @@ main { padding: 14px 20px 40px; }
   border: 1.5px solid #222;
   padding: 14px 16px;
   margin-bottom: 18px;
-  font-size: 14.5px;
+  font-size: 13.5px;
   page-break-inside: avoid;
   break-inside: avoid;
 }
-.passage-box .direction { font-weight: 700; margin-bottom: 8px; font-size: 14px; }
+.passage-box .direction { font-weight: 700; margin-bottom: 8px; font-size: 13px; }
 
 .direction-line {
   font-weight: 700;
-  font-size: 14px;
+  font-size: 13px;
   margin: 22px 0 12px;
   padding-top: 10px;
   border-top: 1px dashed #999;
@@ -130,7 +130,7 @@ main { padding: 14px 20px 40px; }
 }
 .sec-head { margin: 18px 0 8px; font-size: 15px; color: #1d3557; }
 
-.q-item { margin-bottom: 18px; page-break-inside: avoid; break-inside: avoid; font-size: 15px; }
+.q-item { margin-bottom: 18px; page-break-inside: avoid; break-inside: avoid; font-size: 13.5px; }
 .cloze-line { break-inside: avoid; }
 .a-item { break-inside: avoid; }
 .q-item .q-text { font-weight: 600; white-space: pre-line; }
@@ -148,8 +148,8 @@ main { padding: 14px 20px 40px; }
 /* 빈칸 암기지 */
 .cloze-line { margin-bottom: 14px; page-break-inside: avoid; }
 .cloze-num { font-weight: 700; margin-right: 6px; }
-.cloze-en { font-size: 15.5px; }
-.cloze-ko { font-size: 13px; color: #555; margin-left: 24px; }
+.cloze-en { font-size: 14px; }
+.cloze-ko { font-size: 12px; color: #555; margin-left: 24px; }
 .blank {
   display: inline-block;
   border-bottom: 1.5px solid #222;
@@ -161,16 +161,23 @@ main { padding: 14px 20px 40px; }
 .blank.hint-mode { color: #222; font-weight: 400; letter-spacing: 1px; }
 
 /* 단어시험 표 */
-table.word-table { width: 100%; border-collapse: collapse; font-size: 15px; }
+table.word-table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
 .word-table th, .word-table td { border: 1px solid #555; padding: 8px 10px; }
 .word-table th { background: #f1f5f9; font-size: 13px; }
 .word-table td.no { text-align: center; width: 40px; }
 .word-table td.ans { width: 45%; }
 
+/* 단어시험 — 화면에서 답 칸 클릭 시 정답 표시 */
+td.word-ans { cursor: pointer; }
+td.word-ans .revealed { color: #c92c39; font-weight: 700; }
+
+/* 지문 분석 */
+.ana-body { white-space: pre-line; font-size: 13.5px; margin-bottom: 10px; }
+
 /* 정답지 */
-.answer-sheet .a-item { margin-bottom: 12px; font-size: 14.5px; page-break-inside: avoid; }
+.answer-sheet .a-item { margin-bottom: 12px; font-size: 13.5px; page-break-inside: avoid; }
 .answer-sheet .a-ans { color: #c92c39; font-weight: 700; }
-.answer-sheet .a-exp { font-size: 13px; color: #444; margin-left: 22px; }
+.answer-sheet .a-exp { font-size: 12px; color: #444; margin-left: 22px; }
 
 footer { text-align: center; padding: 16px; color: #94a3b8; }
 
@@ -189,4 +196,6 @@ footer { text-align: center; padding: 16px; color: #94a3b8; }
   body.print-q #sheetA { display: none !important; }
   body.print-a #sheetQ { display: none !important; }
   body.print-a #sheetA { display: block !important; }
+  /* 화면에서 눌러 본 단어 정답은 인쇄에 나오지 않게 */
+  td.word-ans .revealed { display: none !important; }
 }
