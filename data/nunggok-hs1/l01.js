@@ -16,12 +16,16 @@ window.QUNITS['nunggok-hs1/l01'] = {
   /* 지문 분석 — 문장 번호는 "본문 보기" 탭의 번호 기준 */
   analysis: [
     {
-      title: '주제',
-      body: '예술에 대한 관심, 기술 전공, 이야기에 대한 사랑이라는 삶의 조각들을 연결해 자신만의 진로(테크니컬 디렉터)를 찾은 Amy의 이야기.',
+      title: '배경 지식',
+      body: '테크니컬 디렉터(technical director)는 애니메이션 스튜디오에서 예술과 기술을 잇는 직군이다. 캐릭터의 머리카락·옷·물의 움직임을 프로그램으로 구현하거나 제작 파이프라인을 관리하는 등, 코드를 다루면서도 결과물은 "예술"인 일을 한다. 그림만 그리는 애니메이터와도, 순수 개발자와도 다른 중간 지대의 직업이다.\n\n"점들을 연결한다(connecting the dots)"는 표현은 스티브 잡스의 2005년 스탠퍼드 연설로 유명해졌다. 지금은 서로 상관없어 보이는 경험(점)들이 나중에 돌아보면 하나의 선으로 이어진다는 뜻으로, 이 글의 제목과 주제도 같은 생각에서 나왔다.',
     },
     {
-      title: '요지',
-      body: '관심사를 꼭 하나만 고를 필요는 없다(You don\'t have to pick just one). 서로 달라 보이는 조각들의 교차점(intersection)을 찾고 눈과 귀를 열어 두면 새로운 기회가 열린다.',
+      title: '제목 · 주제 · 요약',
+      body: '제목  Connecting Amy\'s Dots\n(에이미의 점들을 연결하기)\n\n주제  How Amy found her own career path by connecting her love of art, technology, and stories\n(예술·기술·이야기에 대한 사랑을 연결해 에이미가 자신만의 진로를 찾은 과정)\n\n요약  Amy felt torn between art and technology until her manager told her she did not have to pick just one; by looking back at her childhood love of stories, she found the intersection of her interests and discovered the role of a technical director.\n(예술과 기술 사이에서 갈등하던 에이미는 "하나만 고를 필요 없다"는 매니저의 말을 듣고, 어린 시절부터 이어진 이야기 사랑을 돌아보며 관심사들의 교차점을 찾아 테크니컬 디렉터라는 직무를 발견한다.)',
+    },
+    {
+      title: '핵심 단어 (시험 빈출)',
+      body: '1. intersection 교차점 = crossing point ↔ separation(분리)\n2. curiosity 호기심 = inquisitiveness, interest\n3. grasp 이해하다, 파악하다 = understand, comprehend\n4. abstract 추상적인 ↔ concrete(구체적인)\n5. grateful 감사하는 = thankful, appreciative\n6. applicable 적용되는 = relevant\n7. virtual 가상의, 온라인의 ↔ real, offline\n8. fulfill 채우다, 충족하다 = satisfy, meet\n9. constantly 끊임없이 = continually, all the time\n10. stumble into 우연히 들어가다 = come across by chance\n11. by no means 결코 ~이 아닌 = never, not at all\n12. pinpoint 정확히 짚어내다 = identify exactly',
     },
     {
       title: '글의 구조 (이야기 흐름)',

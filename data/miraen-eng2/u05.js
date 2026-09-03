@@ -16,12 +16,16 @@ window.QUNITS['miraen-eng2/u05'] = {
   /* 지문 분석 — 문장 번호는 "본문 보기" 탭의 번호 기준 */
   analysis: [
     {
-      title: '주제',
-      body: '졸업을 앞둔 젊은이들에게 두 명사가 전하는 삶과 진로에 대한 조언. 아디치에는 "남이 아닌 나를 위한 선택"을, 팀 쿡은 "기술과 인문학의 결합"을 말한다.',
+      title: '배경 지식',
+      body: '졸업식 축사(commencement address)는 미국 대학 졸업식에서 저명 인사를 초청해 듣는 연설로, 스티브 잡스의 2005년 스탠퍼드 연설처럼 사회적으로 큰 울림을 남기는 경우가 많다.\n\n치마만다 응고지 아디치에(1977~)는 나이지리아 출신 소설가로, 『보라색 히비스커스』, 『태양은 노랗게 타오른다』 등을 썼고 아프리카 문학을 이끄는 작가로 평가받는다. 이 연설은 2015년 미국 웰즐리 대학(여자대학) 졸업식 축사이다.\n\n팀 쿡(1960~)은 애플의 CEO로, 스티브 잡스의 뒤를 이어 2011년부터 애플을 이끌고 있다. 이 연설은 2017년 MIT(매사추세츠 공과대학) 졸업식 축사로, 기술의 시대에 인간적 가치가 왜 중요한지를 말한 연설로 유명하다.',
     },
     {
-      title: '요지 (연설별)',
-      body: '· 아디치에: 남을 기쁘게 하려고 자신을 비틀지 말고, 진정 원하는 것(desire)을 좇아라. 시도 자체에 의미가 있다.\n· 팀 쿡: 기술만으로는 충분하지 않다. 가치관·연민·인문학과 결합될 때 기술은 모두를 위한 발전을 만든다.',
+      title: '제목 · 주제 · 요약',
+      body: '제목  Inspiring Words for Moving Forward\n(앞으로 나아가는 이들을 위한 격려의 말)\n\n주제  Two commencement speakers\' advice on following your true desire and combining technology with the humanities\n(자신의 진정한 열망을 따르라는 것, 그리고 기술과 인문학의 결합에 대한 두 축사 연설자의 조언)\n\n요약  Adichie urges graduates to follow their own desire instead of twisting themselves to please others, and Cook stresses that technology becomes truly valuable only when it is married with the humanities and human values.\n(아디치에는 남을 기쁘게 하려고 자신을 비틀지 말고 자신의 열망을 따르라고 촉구하고, 쿡은 기술이 인문학·인간적 가치와 결합할 때 비로소 진정한 가치를 갖는다고 강조한다.)',
+    },
+    {
+      title: '핵심 단어 (시험 빈출)',
+      body: '1. desire 열망 = longing, craving\n2. courageous 용감한 = brave, bold\n3. guarantee 보장 = assurance, promise\n4. concerted 합심한, 결연한 = joint, combined\n5. urge 강력히 권하다 = encourage, press\n6. multifaceted 다면적인 = diverse, varied ↔ simple(단순한)\n7. adverse 부정적인, 불리한 = negative, harmful ↔ favorable(유리한)\n8. consequence 결과 = result, outcome\n9. compassion 연민 = sympathy, pity\n10. interconnected 서로 연결된 = linked, related\n11. infuse 불어넣다, 스며들게 하다 = instill\n12. assess 평가하다 = evaluate, judge',
     },
     {
       title: '글의 구조 (이야기 흐름)',

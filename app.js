@@ -203,7 +203,119 @@
     return { qh: qh, ah: ah };
   }
 
-  /* ── 4. 지문 분석 ─────────────────── */
+  /* ── 4. 워크북 (해석 쓰기 · 순서 배열) ─────────────────── */
+  function genWorkbook() {
+    const type = $('wbType').value;
+    const cntVal = $('wbCount').value;
+    const r = rng();
+    if (type === 'trans') {
+      // 해석 쓰기: 본문 문장을 순서대로 (일부만 뽑아도 본문 순서 유지)
+      let idxs = unitData.passage.map((_, i) => i);
+      if (cntVal !== 'all') {
+        idxs = QLogic.pickN(idxs, parseInt(cntVal, 10), r).sort((x, y) => x - y);
+      }
+      let q = sheetHead('워크북 — 해석 쓰기');
+      q += `<div class="direction-line">※ 주어진 영어 문장을 한글로 해석하시오. (1~${idxs.length})</div>`;
+      let a = sheetHead('워크북 — 해석 쓰기 정답');
+      idxs.forEach((pi, i) => {
+        const s = unitData.passage[pi];
+        q += `<div class="q-item"><div class="q-text"><span class="q-num">${i + 1}.</span>${esc(s.en)}</div><div class="write-box"></div></div>`;
+        a += `<div class="a-item"><b>${i + 1}.</b> ${esc(s.en)}<div class="a-exp"><span class="a-ans">${esc(s.ko)}</span></div></div>`;
+      });
+      showSheets(q, a);
+      return;
+    }
+    // 순서 배열: 한 구간 안에서 연속 4문장(주어진 글 1 + A·B·C)을 뽑아 섞는다
+    const ranges = Array.isArray(unitData.sections) && unitData.sections.length
+      ? unitData.sections.map((s) => [s.start, s.end])
+      : [[0, unitData.passage.length - 1]];
+    const starts = [];
+    ranges.forEach(([st, en]) => {
+      for (let i = st; i + 3 <= en; i++) starts.push(i);
+    });
+    if (!starts.length) { alert('본문이 짧아 순서 배열을 만들 수 없습니다.'); return; }
+    const want = cntVal === 'all' ? 8 : Math.ceil(parseInt(cntVal, 10) / 4);
+    // 겹치지 않는 시작점 우선 선택
+    const shuffledStarts = QLogic.shuffle(starts, r);
+    const chosen = [];
+    for (const st of shuffledStarts) {
+      if (chosen.every((c) => Math.abs(c - st) >= 4)) chosen.push(st);
+      if (chosen.length >= want) break;
+    }
+    for (const st of shuffledStarts) {
+      if (chosen.length >= want) break;
+      if (!chosen.includes(st)) chosen.push(st);
+    }
+    const LET = ['(A)', '(B)', '(C)'];
+    let q = sheetHead('워크북 — 순서 배열');
+    q += `<div class="direction-line">※ 주어진 글 다음에 이어질 글의 순서를 쓰시오. (1~${chosen.length})</div>`;
+    let a = sheetHead('워크북 — 순서 배열 정답');
+    chosen.forEach((st, i) => {
+      const rest = [unitData.passage[st + 1], unitData.passage[st + 2], unitData.passage[st + 3]];
+      let perm = QLogic.shuffle([0, 1, 2], r);
+      let guard = 0;
+      while (perm.join() === '0,1,2' && guard < 10) { perm = QLogic.shuffle([0, 1, 2], r); guard++; }
+      if (perm.join() === '0,1,2') perm = [1, 0, 2];
+      // perm[j] = 화면 j번째 자리에 오는 원문 문장 번호 → 정답: 원문 순서대로의 라벨
+      const answer = [0, 1, 2].map((orig) => LET[perm.indexOf(orig)]).join(' - ');
+      q += `<div class="q-item"><div class="q-text"><span class="q-num">${i + 1}.</span>[주어진 글] ${esc(unitData.passage[st].en)}</div>`;
+      perm.forEach((origIdx, j) => {
+        q += `<div style="margin:6px 0 0 14px">${LET[j]} ${esc(rest[origIdx].en)}</div>`;
+      });
+      q += `<div style="margin:10px 0 0 14px">답: (      ) - (      ) - (      )</div></div>`;
+      a += `<div class="a-item"><b>${i + 1}.</b> <span class="a-ans">${esc(answer)}</span></div>`;
+    });
+    showSheets(q, a);
+  }
+
+  /* ── 파일로 저장 (문제지+정답지를 하나의 HTML 파일로) ─────────────────── */
+  let cssCache = null;
+  async function saveSheets() {
+    if (!$('sheetQ').innerHTML.trim()) { alert('먼저 [만들기]를 눌러 자료를 만들어 주세요.'); return; }
+    if (cssCache === null) {
+      try { cssCache = await (await fetch('style.css')).text(); } catch (e) { cssCache = ''; }
+    }
+    const p = profile();
+    const u = p.units.find((x) => x.id === $('selUnit').value);
+    const d = new Date();
+    const stamp = d.getFullYear() + String(d.getMonth() + 1).padStart(2, '0') + String(d.getDate()).padStart(2, '0');
+    const head = $('sheetQ').querySelector('.sheet-head h2');
+    const docTitle = (head ? head.textContent : '자료') + ' — ' + u.label;
+    const fname = ('영어문제_' + u.label + '_' + (head ? head.textContent : '자료') + '_' + stamp + '.html')
+      .replace(/[\\/:*?"<>|]/g, '').replace(/\s+/g, ' ');
+    const html = '<!DOCTYPE html>\n<html lang="ko"><head><meta charset="UTF-8">' +
+      '<meta name="viewport" content="width=device-width, initial-scale=1">' +
+      '<title>' + esc(docTitle) + '</title><style>' + cssCache +
+      '\n.saved-note{max-width:800px;margin:10px auto;font-size:12px;color:#64748b;}' +
+      '\n.answer-block{page-break-before:always;}</style></head><body>' +
+      '<p class="saved-note no-print">저장된 자료입니다. 인쇄(Ctrl+P)하면 문제지와 정답지가 이어서 출력됩니다.</p>' +
+      '<div class="sheet">' + $('sheetQ').innerHTML + '</div>' +
+      '<div class="sheet answer-sheet answer-block">' + $('sheetA').innerHTML + '</div>' +
+      '</body></html>';
+    if (window.showSaveFilePicker) {
+      try {
+        const handle = await window.showSaveFilePicker({
+          suggestedName: fname,
+          types: [{ description: 'HTML 파일', accept: { 'text/html': ['.html'] } }],
+        });
+        const w = await handle.createWritable();
+        await w.write(html);
+        await w.close();
+        return;
+      } catch (e) {
+        if (e && e.name === 'AbortError') return; // 사용자가 취소
+        // 실패 시 아래 다운로드 방식으로 폴백
+      }
+    }
+    const blob = new Blob([html], { type: 'text/html' });
+    const aEl = document.createElement('a');
+    aEl.href = URL.createObjectURL(blob);
+    aEl.download = fname;
+    aEl.click();
+    URL.revokeObjectURL(aEl.href);
+  }
+
+  /* ── 5. 지문 분석 ─────────────────── */
   function renderAnalysis() {
     const noAns = sheetHead('지문 분석') + '<p>정답지가 따로 없는 자료입니다.</p>';
     if (!Array.isArray(unitData.analysis) || !unitData.analysis.length) {
@@ -266,6 +378,8 @@
   $('btnCloze').addEventListener('click', guard(genCloze));
   $('btnWord').addEventListener('click', guard(genWord));
   $('btnExam').addEventListener('click', guard(genExam));
+  $('btnWb').addEventListener('click', guard(genWorkbook));
+  $('btnSave').addEventListener('click', saveSheets);
 
   function printSheet(mode) {
     document.body.classList.add(mode);
