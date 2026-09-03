@@ -326,6 +326,16 @@
     unitData.analysis.forEach((a) => {
       q += `<h3 class="sec-head">${esc(a.title)}</h3><div class="ana-body">${esc(a.body)}</div>`;
     });
+    // 문장별 분석: 본문 전 문장에 대해 영문·해석·문법 포인트
+    if (Array.isArray(unitData.sentNotes) && unitData.sentNotes.length === unitData.passage.length) {
+      q += `<h3 class="sec-head">문장별 분석</h3>`;
+      unitData.passage.forEach((s, i) => {
+        q += `<div class="sent-ana"><div class="sa-en"><b>${String(i + 1).padStart(2, '0')}</b> ${esc(s.en)}</div>` +
+          `<div class="sa-ko">${esc(s.ko)}</div>` +
+          (unitData.sentNotes[i] ? `<div class="sa-note">▶ ${esc(unitData.sentNotes[i])}</div>` : '') +
+          `</div>`;
+      });
+    }
     showSheets(q, noAns);
   }
 

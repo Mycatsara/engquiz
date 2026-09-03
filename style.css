@@ -173,6 +173,10 @@ td.word-ans .revealed { color: #c92c39; font-weight: 700; }
 
 /* 지문 분석 */
 .ana-body { white-space: pre-line; font-size: 13.5px; margin-bottom: 10px; }
+.sent-ana { margin-bottom: 12px; page-break-inside: avoid; break-inside: avoid; }
+.sent-ana .sa-en { font-size: 13.5px; }
+.sent-ana .sa-ko { font-size: 12.5px; color: #555; margin-left: 22px; }
+.sent-ana .sa-note { font-size: 12.5px; color: #1d3557; margin-left: 22px; white-space: pre-line; }
 
 /* 정답지 */
 .answer-sheet .a-item { margin-bottom: 12px; font-size: 13.5px; page-break-inside: avoid; }

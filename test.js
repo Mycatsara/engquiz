@@ -113,6 +113,11 @@ window.QREG.profiles.forEach((p) => {
         d.analysis.every((a) => typeof a.title === 'string' && a.title.trim() && typeof a.body === 'string' && a.body.trim()),
         tag + ' 지문 분석 title/body 완비');
     }
+    if (d.sentNotes) {
+      ok(Array.isArray(d.sentNotes) && d.sentNotes.length === d.passage.length,
+        tag + ' 문장별 분석 수가 본문 문장 수와 일치 (' + (d.sentNotes ? d.sentNotes.length : 0) + '/' + d.passage.length + ')');
+      ok(d.sentNotes.every((n) => typeof n === 'string'), tag + ' 문장별 분석 형식');
+    }
     const ids = d.bank.map((q) => q.id);
     ok(new Set(ids).size === ids.length, tag + ' 문항 id 중복 없음');
     d.bank.forEach((q) => {
