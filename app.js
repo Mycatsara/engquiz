@@ -162,19 +162,12 @@
     const shAll = unitData.bank.filter((x) => x.type === 'short');
     let r, mcPool, shPool;
     if (round > 0) {
-      // 회차 모드: 단원 고유 시드로 은행을 3등분해 회차끼리 문제가 겹치지 않게 하고,
+      // 회차 모드: 단원 고유 시드로 은행을 4등분해 회차끼리 문제가 겹치지 않게 하고,
       // 같은 회차는 언제 뽑아도 같은 시험지가 나온다
-      const key = $('selProfile').value + '/' + $('selUnit').value;
-      let h = 0;
-      for (let ci = 0; ci < key.length; ci++) h = (h * 31 + key.charCodeAt(ci)) >>> 0;
-      const splitR = QLogic.mulberry32(h + 7);
-      const mcShuffled = QLogic.shuffle(mcAll, splitR);
-      const shShuffled = QLogic.shuffle(shAll, splitR);
-      const mcPer = Math.ceil(mcShuffled.length / 3);
-      const shPer = Math.ceil(shShuffled.length / 3);
-      mcPool = mcShuffled.slice((round - 1) * mcPer, round * mcPer);
-      shPool = shShuffled.slice((round - 1) * shPer, round * shPer);
-      r = QLogic.mulberry32(h + round);
+      const splitR = QLogic.mulberry32(unitSeed(7));
+      mcPool = roundSlice(mcAll, 4, round, splitR);
+      shPool = roundSlice(shAll, 4, round, splitR);
+      r = QLogic.mulberry32(unitSeed(round));
     } else {
       mcPool = mcAll;
       shPool = shAll;
@@ -258,15 +251,41 @@
     order: '주어진 글 다음에 이어질 글의 순서를 쓰시오.',
   };
 
-  function wbCountOf(cntVal, poolSize, ratio) {
-    if (cntVal === 'all') return poolSize;
-    return Math.min(poolSize, Math.max(1, Math.round(parseInt(cntVal, 10) * (ratio || 1))));
+  const WB_TYPES = ['trans', 'vocab', 'gram', 'verb', 'fix', 'insert', 'order'];
+  const WB_ROUNDS = 4;          // 워크북 회차 수
+  const WB_PER_TYPE_ROUND = 6;  // 회차 모드에서 유형당 문항 수 (7유형 × 6 = 42문항)
+
+  // pool에서 n개를 뽑아 원래 순서(정렬 키)대로 돌려준다
+  function wbPick(pool, n, r, keyFn) {
+    const picked = QLogic.pickN(pool, Math.min(n, pool.length), r);
+    return keyFn ? picked.sort((x, y) => keyFn(x) - keyFn(y)) : picked;
   }
 
-  // 해석 쓰기
-  function wbTrans(r, cntVal) {
-    let idxs = unitData.passage.map((_, i) => i);
-    if (cntVal !== 'all') idxs = QLogic.pickN(idxs, parseInt(cntVal, 10), r).sort((x, y) => x - y);
+  // 연속 windowLen문장 창의 시작점 목록 (본문 전체가 이어지는 글이므로 구간 경계도 넘을 수 있음)
+  function wbAllStarts(windowLen) {
+    const starts = [];
+    for (let i = 0; i + windowLen - 1 < unitData.passage.length; i++) starts.push(i);
+    return starts;
+  }
+
+  // 시작점 풀에서 n개 선택: 겹치지 않는 창을 먼저 채우고, 부족하면 겹치는 창도 허용
+  function wbPickStarts(startsPool, n, windowLen, r) {
+    const shuffled = QLogic.shuffle(startsPool, r);
+    const chosen = [];
+    for (const st of shuffled) {
+      if (chosen.length >= n) break;
+      if (chosen.every((c) => Math.abs(c - st) >= windowLen)) chosen.push(st);
+    }
+    for (const st of shuffled) {
+      if (chosen.length >= n) break;
+      if (!chosen.includes(st)) chosen.push(st);
+    }
+    return chosen.sort((x, y) => x - y);
+  }
+
+  // 해석 쓰기 — pool: 문장 인덱스 배열
+  function wbTrans(pool, n, r) {
+    const idxs = wbPick(pool, n, r, (x) => x);
     let q = '', a = '';
     idxs.forEach((pi, i) => {
       const s = unitData.passage[pi];
@@ -276,83 +295,53 @@
     return { q: q, a: a, n: idxs.length };
   }
 
-  // 어휘 선택 / 어법 선택 공용: pairs = [{i, o(정답), x(오답)}]
-  function wbChoice(pairs, r, cntVal) {
-    let sel = pairs.map((_, i) => i);
-    if (cntVal !== 'all') sel = QLogic.pickN(sel, parseInt(cntVal, 10), r).sort((x, y) => x - y);
+  // 어휘 선택 / 어법 선택 공용 — pool: [{i, o(정답), x(오답)}]
+  function wbChoice(pool, n, r) {
+    const sel = wbPick(pool, n, r, (p) => p.i);
     let q = '', a = '';
-    sel.forEach((pi, n) => {
-      const p = pairs[pi];
+    sel.forEach((p, k) => {
       const s = unitData.passage[p.i].en;
       const flip = r() < 0.5;
       const box = `<b>( ${esc(flip ? p.x : p.o)} / ${esc(flip ? p.o : p.x)} )</b>`;
       const shown = esc(s).replace(esc(p.o), box);
-      q += `<div class="q-item"><div class="q-text q-sent"><span class="q-num">${n + 1}.</span>${shown}</div></div>`;
-      a += `<div class="a-item"><b>${n + 1}.</b> <span class="a-ans">${esc(p.o)}</span></div>`;
+      q += `<div class="q-item"><div class="q-text q-sent"><span class="q-num">${k + 1}.</span>${shown}</div></div>`;
+      a += `<div class="a-item"><b>${k + 1}.</b> <span class="a-ans">${esc(p.o)}</span></div>`;
     });
     return { q: q, a: a, n: sel.length };
   }
 
-  // 동사 바꾸기: verbs = [{i, o(정답 형태), b(원형)}]
-  function wbVerbFrag(r, cntVal) {
-    const pool = unitData.wbVerb;
-    let sel = pool.map((_, i) => i);
-    if (cntVal !== 'all') sel = QLogic.pickN(sel, parseInt(cntVal, 10), r).sort((x, y) => x - y);
+  // 동사 바꾸기 — pool: [{i, o(정답 형태), b(원형)}]
+  function wbVerbFrag(pool, n, r) {
+    const sel = wbPick(pool, n, r, (p) => p.i);
     let q = '', a = '';
-    sel.forEach((pi, n) => {
-      const p = pool[pi];
+    sel.forEach((p, k) => {
       const s = unitData.passage[p.i].en;
       const shown = esc(s).replace(esc(p.o), `<b>( ${esc(p.b)} )</b>`);
-      q += `<div class="q-item"><div class="q-text q-sent"><span class="q-num">${n + 1}.</span>${shown}</div></div>`;
-      a += `<div class="a-item"><b>${n + 1}.</b> <span class="a-ans">${esc(p.o)}</span></div>`;
+      q += `<div class="q-item"><div class="q-text q-sent"><span class="q-num">${k + 1}.</span>${shown}</div></div>`;
+      a += `<div class="a-item"><b>${k + 1}.</b> <span class="a-ans">${esc(p.o)}</span></div>`;
     });
     return { q: q, a: a, n: sel.length };
   }
 
-  // 어법 오류 수정: wbGram의 오답형을 문장에 심고 찾아 고치게 한다
-  function wbFix(pairs, r, cntVal) {
-    let sel = pairs.map((_, i) => i);
-    if (cntVal !== 'all') sel = QLogic.pickN(sel, parseInt(cntVal, 10), r).sort((x, y) => x - y);
+  // 어법 오류 수정 — wbGram의 오답형을 문장에 심고 찾아 고치게 한다
+  function wbFix(pool, n, r) {
+    const sel = wbPick(pool, n, r, (p) => p.i);
     let q = '', a = '';
-    sel.forEach((pi, n) => {
-      const p = pairs[pi];
+    sel.forEach((p, k) => {
       const s = unitData.passage[p.i].en;
       const shown = esc(s).replace(esc(p.o), esc(p.x));
-      q += `<div class="q-item"><div class="q-text q-sent"><span class="q-num">${n + 1}.</span>${shown}</div><div class="write-box" style="height:34px"></div></div>`;
-      a += `<div class="a-item"><b>${n + 1}.</b> <span class="a-ans">${esc(p.x)} → ${esc(p.o)}</span></div>`;
+      q += `<div class="q-item"><div class="q-text q-sent"><span class="q-num">${k + 1}.</span>${shown}</div><div class="write-box" style="height:34px"></div></div>`;
+      a += `<div class="a-item"><b>${k + 1}.</b> <span class="a-ans">${esc(p.x)} → ${esc(p.o)}</span></div>`;
     });
     return { q: q, a: a, n: sel.length };
   }
 
-  // 구간 안에서 연속 windowLen문장 시작점들을 겹치지 않게 뽑는다
-  function wbWindows(want, windowLen, r) {
-    const ranges = Array.isArray(unitData.sections) && unitData.sections.length
-      ? unitData.sections.map((s) => [s.start, s.end])
-      : [[0, unitData.passage.length - 1]];
-    const starts = [];
-    ranges.forEach(([st, en]) => {
-      for (let i = st; i + windowLen - 1 <= en; i++) starts.push(i);
-    });
-    const shuffled = QLogic.shuffle(starts, r);
-    const chosen = [];
-    for (const st of shuffled) {
-      if (chosen.every((c) => Math.abs(c - st) >= windowLen)) chosen.push(st);
-      if (chosen.length >= want) break;
-    }
-    for (const st of shuffled) {
-      if (chosen.length >= want) break;
-      if (!chosen.includes(st)) chosen.push(st);
-    }
-    return chosen;
-  }
-
-  // 문장 삽입: 연속 5문장 중 가운데 하나를 빼서 위치를 고르게 한다
-  function wbInsert(r, cntVal) {
-    const want = cntVal === 'all' ? 5 : Math.max(2, Math.round(parseInt(cntVal, 10) / 4));
-    const chosen = wbWindows(want, 5, r);
+  // 문장 삽입 — 연속 5문장 중 하나(2~4번째)를 빼서 들어갈 위치를 고르게 한다
+  function wbInsert(startsPool, n, r) {
+    const chosen = wbPickStarts(startsPool, n, 5, r);
     let q = '', a = '';
     chosen.forEach((st, i) => {
-      const k = 1 + Math.floor(r() * 3); // 제거할 문장의 창 내 위치(1~3)
+      const k = 1 + Math.floor(r() * 3);
       const given = unitData.passage[st + k].en;
       const remain = [0, 1, 2, 3, 4].filter((d) => d !== k).map((d) => unitData.passage[st + d].en);
       let flow = '';
@@ -365,11 +354,9 @@
     return { q: q, a: a, n: chosen.length };
   }
 
-  // 순서 배열: 연속 4문장(주어진 글 1 + A·B·C 섞기)
-  function wbOrder(r, cntVal) {
-    const want = cntVal === 'all' ? 8 : Math.max(2, Math.round(parseInt(cntVal, 10) / 4));
-    const chosen = wbWindows(want, 4, r);
-    if (!chosen.length) return { q: '', a: '', n: 0 };
+  // 순서 배열 — 연속 4문장(주어진 글 1 + A·B·C 섞기)
+  function wbOrder(startsPool, n, r) {
+    const chosen = wbPickStarts(startsPool, n, 4, r);
     const LET = ['(A)', '(B)', '(C)'];
     let q = '', a = '';
     chosen.forEach((st, i) => {
@@ -389,52 +376,91 @@
     return { q: q, a: a, n: chosen.length };
   }
 
+  // 단원별 고정 시드 (회차 분할·고정 시험지용)
+  function unitSeed(extra) {
+    const key = $('selProfile').value + '/' + $('selUnit').value;
+    let h = 0;
+    for (let ci = 0; ci < key.length; ci++) h = (h * 31 + key.charCodeAt(ci)) >>> 0;
+    return (h + (extra || 0)) >>> 0;
+  }
+
+  // 배열을 고정 시드로 섞어 rounds등분한 뒤 round(1부터)번째 조각을 돌려준다
+  function roundSlice(arr, rounds, round, seedRng) {
+    const mixed = QLogic.shuffle(arr, seedRng);
+    const per = Math.ceil(mixed.length / rounds);
+    return mixed.slice((round - 1) * per, round * per);
+  }
+
   function genWorkbook() {
     const type = $('wbType').value;
-    const cntVal = $('wbCount').value;
-    const r = rng();
-    const hasVocab = Array.isArray(unitData.wbVocab) && unitData.wbVocab.length > 0;
-    const hasGram = Array.isArray(unitData.wbGram) && unitData.wbGram.length > 0;
-    const hasVerb = Array.isArray(unitData.wbVerb) && unitData.wbVerb.length > 0;
+    const cnt = parseInt($('wbCount').value, 10);
+    const round = parseInt($('wbRound').value, 10);
+    const gramAll = Array.isArray(unitData.wbGram) ? unitData.wbGram : [];
+    const vocabAll = Array.isArray(unitData.wbVocab) ? unitData.wbVocab : [];
+    const verbAll = Array.isArray(unitData.wbVerb) ? unitData.wbVerb : [];
 
-    function runOne(t, cv, gramPool) {
-      if (t === 'trans') return wbTrans(r, cv);
-      if (t === 'vocab') return hasVocab ? wbChoice(unitData.wbVocab, r, cv) : null;
-      if (t === 'gram') return hasGram ? wbChoice(gramPool || unitData.wbGram, r, cv) : null;
-      if (t === 'verb') return hasVerb ? wbVerbFrag(r, cv) : null;
-      if (t === 'fix') return hasGram ? wbFix(gramPool || unitData.wbGram, r, cv) : null;
-      if (t === 'insert') return wbInsert(r, cv);
-      if (t === 'order') return wbOrder(r, cv);
+    // 유형별 풀 구성. 무작위: 전체 풀 / 회차: 고정 시드로 4등분한 조각
+    let r, pools, perType;
+    const transAll = unitData.passage.map((_, i) => i);
+    const insAll = wbAllStarts(5);
+    const ordAll = wbAllStarts(4);
+    if (round > 0) {
+      const splitR = QLogic.mulberry32(unitSeed(101));
+      const gramR = roundSlice(gramAll, WB_ROUNDS, round, splitR);
+      const half = Math.ceil(gramR.length / 2);
+      pools = {
+        trans: roundSlice(transAll, WB_ROUNDS, round, splitR),
+        vocab: roundSlice(vocabAll, WB_ROUNDS, round, splitR),
+        gram: gramR.slice(0, half),
+        fix: gramR.slice(half),
+        verb: roundSlice(verbAll, WB_ROUNDS, round, splitR),
+        insert: roundSlice(insAll, WB_ROUNDS, round, splitR),
+        order: roundSlice(ordAll, WB_ROUNDS, round, splitR),
+      };
+      r = QLogic.mulberry32(unitSeed(200 + round));
+      perType = WB_PER_TYPE_ROUND;
+    } else {
+      r = rng();
+      // 전체 모드에서 어법 선택·오류 수정이 같은 문장을 쓰지 않도록 반씩 나눈다
+      const mixed = QLogic.shuffle(gramAll, r);
+      const half = Math.ceil(mixed.length / 2);
+      pools = {
+        trans: transAll, vocab: vocabAll,
+        gram: type === 'all' ? mixed.slice(0, half) : gramAll,
+        fix: type === 'all' ? mixed.slice(half) : gramAll,
+        verb: verbAll, insert: insAll, order: ordAll,
+      };
+      perType = cnt;
+    }
+
+    function runOne(t, n) {
+      const pool = pools[t];
+      if (!pool || !pool.length) return null;
+      if (t === 'trans') return wbTrans(pool, n, r);
+      if (t === 'vocab' || t === 'gram') return wbChoice(pool, n, r);
+      if (t === 'verb') return wbVerbFrag(pool, n, r);
+      if (t === 'fix') return wbFix(pool, n, r);
+      if (t === 'insert') return wbInsert(pool, n, r);
+      if (t === 'order') return wbOrder(pool, n, r);
       return null;
     }
 
+    const roundTag = round > 0 ? ' — ' + round + '회차' : '';
     if (type !== 'all') {
-      const frag = runOne(type, cntVal, null);
+      const frag = runOne(type, perType);
       if (!frag) { alert('이 단원에는 아직 [' + WB_LABEL[type] + '] 데이터가 없습니다. (단원 등록 시 함께 만듭니다)'); return; }
-      let q = sheetHead('워크북 — ' + WB_LABEL[type]);
+      const title = '워크북 — ' + WB_LABEL[type] + roundTag;
+      let q = sheetHead(title);
       q += `<div class="direction-line">※ ${WB_DIR[type]} (1~${frag.n})</div>` + frag.q;
-      const a = sheetHead('워크북 — ' + WB_LABEL[type] + ' 정답') + frag.a;
-      showSheets(q, a);
+      showSheets(q, sheetHead(title + ' (정답)') + frag.a);
       return;
     }
-
-    // 전체 유형: 어법 선택과 오류 수정이 같은 문장을 쓰지 않도록 wbGram을 반씩 나눈다
-    let gramA = null, gramB = null;
-    if (hasGram) {
-      const mixed = QLogic.shuffle(unitData.wbGram, r);
-      const half = Math.ceil(mixed.length / 2);
-      gramA = mixed.slice(0, half).sort((x, y) => x.i - y.i);
-      gramB = mixed.slice(half).sort((x, y) => x.i - y.i);
-    }
-    const PLAN = [
-      ['trans', '10', null], ['vocab', '10', null], ['gram', '10', gramA],
-      ['verb', '8', null], ['fix', '8', gramB], ['insert', '10', null], ['order', '10', null],
-    ];
-    let q = sheetHead('워크북 — 전체 유형');
-    let a = sheetHead('워크북 — 전체 유형 정답');
+    const title = '워크북 — 전체 유형' + roundTag;
+    let q = sheetHead(title);
+    let a = sheetHead(title + ' (정답)');
     let secNo = 0;
-    PLAN.forEach(([t, cv, pool]) => {
-      const frag = runOne(t, cv, pool);
+    WB_TYPES.forEach((t) => {
+      const frag = runOne(t, perType);
       if (!frag || !frag.n) return;
       secNo++;
       q += `<h3 class="sec-head">${secNo}. ${WB_LABEL[t]}</h3><div class="direction-line">※ ${WB_DIR[t]} (1~${frag.n})</div>` + frag.q;
@@ -443,51 +469,90 @@
     showSheets(q, a);
   }
 
-  /* ── 파일로 저장 (문제지+정답지를 하나의 HTML 파일로) ─────────────────── */
-  let cssCache = null;
+  /* ── PDF로 저장 (문제지 → 새 페이지 → 정답지) ─────────────────── */
   async function saveSheets() {
     if (!$('sheetQ').innerHTML.trim()) { alert('먼저 [만들기]를 눌러 자료를 만들어 주세요.'); return; }
-    if (cssCache === null) {
-      try { cssCache = await (await fetch('style.css')).text(); } catch (e) { cssCache = ''; }
+    if (typeof window.html2pdf !== 'function') {
+      alert('PDF 변환 도구를 불러오지 못했습니다. 인터넷 연결을 확인한 뒤 새로고침해 주세요.');
+      return;
     }
     const p = profile();
     const u = p.units.find((x) => x.id === $('selUnit').value);
     const d = new Date();
     const stamp = d.getFullYear() + String(d.getMonth() + 1).padStart(2, '0') + String(d.getDate()).padStart(2, '0');
     const head = $('sheetQ').querySelector('.sheet-head h2');
-    const docTitle = (head ? head.textContent : '자료') + ' — ' + u.label;
-    const fname = ('영어문제_' + u.label + '_' + (head ? head.textContent : '자료') + '_' + stamp + '.html')
+    const fname = ('영어문제_' + u.label + '_' + (head ? head.textContent : '자료') + '_' + stamp + '.pdf')
       .replace(/[\\/:*?"<>|]/g, '').replace(/\s+/g, ' ');
-    const html = '<!DOCTYPE html>\n<html lang="ko"><head><meta charset="UTF-8">' +
-      '<meta name="viewport" content="width=device-width, initial-scale=1">' +
-      '<title>' + esc(docTitle) + '</title><style>' + cssCache +
-      '\n.saved-note{max-width:800px;margin:10px auto;font-size:12px;color:#64748b;}' +
-      '\n.answer-block{page-break-before:always;}</style></head><body>' +
-      '<p class="saved-note no-print">저장된 자료입니다. 인쇄(Ctrl+P)하면 문제지와 정답지가 이어서 출력됩니다.</p>' +
-      '<div class="sheet">' + $('sheetQ').innerHTML + '</div>' +
-      '<div class="sheet answer-sheet answer-block">' + $('sheetA').innerHTML + '</div>' +
-      '</body></html>';
-    if (window.showSaveFilePicker) {
-      try {
-        const handle = await window.showSaveFilePicker({
-          suggestedName: fname,
-          types: [{ description: 'HTML 파일', accept: { 'text/html': ['.html'] } }],
-        });
-        const w = await handle.createWritable();
-        await w.write(html);
-        await w.close();
-        return;
-      } catch (e) {
-        if (e && e.name === 'AbortError') return; // 사용자가 취소
-        // 실패 시 아래 다운로드 방식으로 폴백
+
+    // 화면 시트를 복제해 인쇄용 모양(테두리·여백 제거)으로 만든 뒤 PDF로 변환
+    const root = document.createElement('div');
+    root.style.cssText = 'width:700px;background:#fff;color:#222;font-family:"Malgun Gothic","맑은 고딕",sans-serif;';
+    const qClone = $('sheetQ').cloneNode(true);
+    const aClone = $('sheetA').cloneNode(true);
+    [qClone, aClone].forEach((el) => {
+      el.style.cssText = 'border:none;max-width:none;margin:0;padding:0;border-radius:0;display:block;';
+      el.classList.remove('hidden-screen');
+      el.querySelectorAll('.no-print').forEach((n) => n.remove());
+      el.querySelectorAll('td.word-ans .revealed').forEach((n) => n.remove());
+    });
+    aClone.classList.add('pdf-answer-block');
+    root.appendChild(qClone);
+    root.appendChild(aClone);
+
+    const btn = $('btnSave');
+    const oldLabel = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = 'PDF 만드는 중…';
+    try {
+      const worker = window.html2pdf().set({
+        margin: [12, 12, 14, 12],
+        filename: fname,
+        image: { type: 'jpeg', quality: 0.95 },
+        html2canvas: { scale: 2, useCORS: true, backgroundColor: '#ffffff' },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+        pagebreak: {
+          mode: ['css', 'legacy'],
+          before: ['.pdf-answer-block'],
+          avoid: ['.q-item', '.passage-box', '.sent-ana', '.cloze-line', '.a-item', 'tr', '.direction-line'],
+        },
+      }).from(root).toPdf();
+      // 하단 중앙 쪽 번호
+      const pdf = await worker.get('pdf');
+      const total = pdf.internal.getNumberOfPages();
+      const pw = pdf.internal.pageSize.getWidth();
+      const ph = pdf.internal.pageSize.getHeight();
+      pdf.setFontSize(9);
+      pdf.setTextColor(90);
+      for (let i = 1; i <= total; i++) {
+        pdf.setPage(i);
+        pdf.text(String(i), pw / 2, ph - 6, { align: 'center' });
       }
+      const blob = pdf.output('blob');
+      if (window.showSaveFilePicker) {
+        try {
+          const handle = await window.showSaveFilePicker({
+            suggestedName: fname,
+            types: [{ description: 'PDF 파일', accept: { 'application/pdf': ['.pdf'] } }],
+          });
+          const w = await handle.createWritable();
+          await w.write(blob);
+          await w.close();
+          return;
+        } catch (e) {
+          if (e && e.name === 'AbortError') return; // 사용자가 취소
+        }
+      }
+      const aEl = document.createElement('a');
+      aEl.href = URL.createObjectURL(blob);
+      aEl.download = fname;
+      aEl.click();
+      URL.revokeObjectURL(aEl.href);
+    } catch (e) {
+      alert('PDF를 만드는 중 문제가 생겼습니다: ' + (e && e.message ? e.message : e));
+    } finally {
+      btn.disabled = false;
+      btn.textContent = oldLabel;
     }
-    const blob = new Blob([html], { type: 'text/html' });
-    const aEl = document.createElement('a');
-    aEl.href = URL.createObjectURL(blob);
-    aEl.download = fname;
-    aEl.click();
-    URL.revokeObjectURL(aEl.href);
   }
 
   /* ── 5. 지문 분석 ─────────────────── */

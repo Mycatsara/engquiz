@@ -93,6 +93,7 @@
         <option value="1">1회차 (고정)</option>
         <option value="2">2회차 (고정)</option>
         <option value="3">3회차 (고정)</option>
+        <option value="4">4회차 (고정)</option>
       </select>
     </label>
     <label><input type="checkbox" id="examShuffle" checked> 선택지 순서 섞기</label>
@@ -112,11 +113,21 @@
         <option value="order">순서 배열</option>
       </select>
     </label>
-    <label>문항 수
+    <label>유형당 문항 수
       <select id="wbCount">
         <option value="10">10</option>
         <option value="20" selected>20</option>
-        <option value="all">전체</option>
+        <option value="30">30</option>
+        <option value="40">40</option>
+      </select>
+    </label>
+    <label>회차
+      <select id="wbRound">
+        <option value="0" selected>무작위</option>
+        <option value="1">1회차 (고정)</option>
+        <option value="2">2회차 (고정)</option>
+        <option value="3">3회차 (고정)</option>
+        <option value="4">4회차 (고정)</option>
       </select>
     </label>
     <button class="primary" id="btnWb">만들기</button>
@@ -132,7 +143,7 @@
 <div class="actionbar no-print hidden" id="actionbar">
   <button id="btnPrintQ">문제지 인쇄</button>
   <button id="btnPrintA">정답지 인쇄</button>
-  <button id="btnSave">파일로 저장</button>
+  <button id="btnSave">PDF로 저장</button>
   <button id="btnToggleA">정답 화면에서 보기/숨기기</button>
   <span class="print-tip">💡 인쇄 창에서 <b>설정 더보기 → 머리글 및 바닥글</b>을 끄면 위쪽 날짜·제목이 안 찍혀요</span>
 </div>
@@ -147,6 +158,7 @@
   <small>개인 학습용 도구 · 만든 문제지는 외부 판매·배포 금지</small>
 </footer>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <script src="logic.js"></script>
 <script src="data/registry.js"></script>
 <script src="app.js"></script>
