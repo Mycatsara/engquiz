@@ -115,19 +115,38 @@
   function genWord() {
     const n = parseInt($('wordCount').value, 10);
     const dir = $('wordDir').value;
-    const items = QLogic.makeWordTest(unitData.words, n, dir, rng());
+    const r = rng();
+    if (dir === 'memo') {
+      // 암기장: 단어와 뜻을 같이 인쇄 (본문 등장 순서 유지)
+      let idxs = unitData.words.map((_, i) => i);
+      if (n < idxs.length) idxs = QLogic.pickN(idxs, n, r).sort((x, y) => x - y);
+      const title = '단어 암기장 (' + idxs.length + '개)';
+      let q = sheetHead(title);
+      q += `<table class="word-table"><tr><th>번호</th><th>단어</th><th>뜻</th></tr>`;
+      idxs.forEach((wi, i) => {
+        const w = unitData.words[wi];
+        q += `<tr><td class="no">${i + 1}</td><td>${esc(w.en)}</td><td class="ans">${esc(w.ko)}</td></tr>`;
+      });
+      q += `</table>`;
+      showSheets(q, sheetHead(title) + '<p>암기장은 정답지가 따로 없습니다. (문제지 인쇄를 사용하세요)</p>');
+      return;
+    }
+    const items = QLogic.makeWordTest(unitData.words, n, dir, r);
     const title = '단어 시험 (' + items.length + '문항)';
     if (items.length < n) {
       alert('이 단원의 단어장에는 ' + unitData.words.length + '개가 있어 ' + items.length + '문항으로 만듭니다.');
     }
     let q = sheetHead(title);
     q += `<table class="word-table"><tr><th>번호</th><th>문제</th><th>답</th></tr>`;
+    // 정답지도 시험지와 같은 표 형식 — 답 칸에 정답이 채워진 형태
     let a = sheetHead(title + ' — 정답');
+    a += `<table class="word-table"><tr><th>번호</th><th>문제</th><th>답</th></tr>`;
     items.forEach((it, i) => {
       q += `<tr><td class="no">${i + 1}</td><td>${esc(it.prompt)}</td><td class="ans word-ans" data-ans="${esc(it.answer)}"></td></tr>`;
-      a += `<div class="a-item"><b>${i + 1}.</b> ${esc(it.prompt)} → <span class="a-ans">${esc(it.answer)}</span></div>`;
+      a += `<tr><td class="no">${i + 1}</td><td>${esc(it.prompt)}</td><td class="ans"><span class="a-ans">${esc(it.answer)}</span></td></tr>`;
     });
     q += `</table>`;
+    a += `</table>`;
     q += `<p class="no-print" style="margin-top:8px;font-size:12px;color:#64748b">💡 화면에서 답 칸을 누르면 정답이 보입니다 (다시 누르면 숨김 · 인쇄에는 나오지 않음)</p>`;
     showSheets(q, a);
   }
