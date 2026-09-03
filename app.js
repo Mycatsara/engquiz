@@ -157,18 +157,39 @@
     const shN = parseInt($('examShort').value, 10);
     if (mcN + shN === 0) { alert('문항 수를 1개 이상 골라주세요.'); return; }
     const doShuffle = $('examShuffle').checked;
-    const r = rng();
-    const mcAvail = unitData.bank.filter((x) => x.type === 'mc').length;
-    const shAvail = unitData.bank.filter((x) => x.type === 'short').length;
-    if ((mcN > 0 && mcAvail < mcN) || (shN > 0 && shAvail < shN)) {
-      alert('이 단원 문제은행에는 객관식 ' + mcAvail + '개, 서술형 ' + shAvail + '개가 있어 그 범위 안에서 만듭니다.');
+    const round = parseInt($('examRound').value, 10);
+    const mcAll = unitData.bank.filter((x) => x.type === 'mc');
+    const shAll = unitData.bank.filter((x) => x.type === 'short');
+    let r, mcPool, shPool;
+    if (round > 0) {
+      // 회차 모드: 단원 고유 시드로 은행을 3등분해 회차끼리 문제가 겹치지 않게 하고,
+      // 같은 회차는 언제 뽑아도 같은 시험지가 나온다
+      const key = $('selProfile').value + '/' + $('selUnit').value;
+      let h = 0;
+      for (let ci = 0; ci < key.length; ci++) h = (h * 31 + key.charCodeAt(ci)) >>> 0;
+      const splitR = QLogic.mulberry32(h + 7);
+      const mcShuffled = QLogic.shuffle(mcAll, splitR);
+      const shShuffled = QLogic.shuffle(shAll, splitR);
+      const mcPer = Math.ceil(mcShuffled.length / 3);
+      const shPer = Math.ceil(shShuffled.length / 3);
+      mcPool = mcShuffled.slice((round - 1) * mcPer, round * mcPer);
+      shPool = shShuffled.slice((round - 1) * shPer, round * shPer);
+      r = QLogic.mulberry32(h + round);
+    } else {
+      mcPool = mcAll;
+      shPool = shAll;
+      r = rng();
     }
-    let selected = QLogic.selectFromBank(unitData.bank, mcN, shN, r);
+    if ((mcN > 0 && mcPool.length < mcN) || (shN > 0 && shPool.length < shN)) {
+      alert((round > 0 ? '이 회차에는' : '이 단원 문제은행에는') + ' 객관식 ' + mcPool.length + '개, 서술형 ' + shPool.length + '개가 있어 그 범위 안에서 만듭니다.');
+    }
+    let selected = QLogic.pickN(mcPool, mcN, r).concat(QLogic.pickN(shPool, shN, r));
     if (doShuffle) {
       selected = selected.map((qq) => (qq.type === 'mc' ? QLogic.shuffleChoices(qq, r) : qq));
     }
-    let q = sheetHead('영어 내신 대비 평가');
-    let a = sheetHead('영어 내신 대비 평가 — 정답 및 해설');
+    const examTitle = '영어 내신 대비 평가' + (round > 0 ? ' — ' + round + '회차' : '');
+    let q = sheetHead(examTitle);
+    let a = sheetHead(examTitle + ' (정답 및 해설)');
     const secs = Array.isArray(unitData.sections) && unitData.sections.length ? unitData.sections : null;
     if (!secs) {
       // 구간 정보가 없는 단원: 본문 전체 + 문제 나열 (기존 방식)
