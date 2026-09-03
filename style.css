@@ -173,6 +173,18 @@ td.word-ans .revealed { color: #c92c39; font-weight: 700; }
 
 /* 지문 분석 */
 .ana-body { white-space: pre-line; font-size: 13.5px; margin-bottom: 10px; }
+.q-sent { font-weight: 400; }
+.sa-tag {
+  display: inline-block;
+  border: 1px solid #c92c39;
+  color: #c92c39;
+  border-radius: 4px;
+  font-size: 11px;
+  padding: 0 5px;
+  margin-right: 5px;
+  vertical-align: 1px;
+}
+.sa-direct { font-size: 12.5px; color: #7a5c00; margin-left: 22px; }
 .sent-ana { margin-bottom: 12px; page-break-inside: avoid; break-inside: avoid; }
 .sent-ana .sa-en { font-size: 13.5px; }
 .sent-ana .sa-ko { font-size: 12.5px; color: #555; margin-left: 22px; }

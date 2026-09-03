@@ -113,6 +113,27 @@ window.QREG.profiles.forEach((p) => {
         d.analysis.every((a) => typeof a.title === 'string' && a.title.trim() && typeof a.body === 'string' && a.body.trim()),
         tag + ' 지문 분석 title/body 완비');
     }
+    ['wbVocab', 'wbGram'].forEach((field) => {
+      if (!d[field]) return;
+      d[field].forEach((p, n) => {
+        ok(Number.isInteger(p.i) && p.i >= 0 && p.i < d.passage.length, tag + ' ' + field + '[' + n + '] 문장 번호 유효');
+        ok(typeof p.o === 'string' && typeof p.x === 'string' && p.o !== p.x, tag + ' ' + field + '[' + n + '] 정답/오답 구분');
+        ok(d.passage[p.i] && d.passage[p.i].en.includes(p.o), tag + ' ' + field + '[' + n + '] 정답어가 해당 문장에 존재 (' + p.o + ')');
+      });
+    });
+    if (d.wbVerb) {
+      d.wbVerb.forEach((p, n) => {
+        ok(Number.isInteger(p.i) && d.passage[p.i] && d.passage[p.i].en.includes(p.o), tag + ' wbVerb[' + n + '] 정답형이 문장에 존재 (' + p.o + ')');
+        ok(typeof p.b === 'string' && p.b.length > 0, tag + ' wbVerb[' + n + '] 원형 존재');
+      });
+    }
+    if (d.sentDirect) {
+      ok(Array.isArray(d.sentDirect) && d.sentDirect.length === d.passage.length,
+        tag + ' 직독직해 수가 본문 문장 수와 일치 (' + d.sentDirect.length + '/' + d.passage.length + ')');
+    }
+    if (d.sentTag) {
+      ok(Array.isArray(d.sentTag) && d.sentTag.length === d.passage.length, tag + ' 문장 태그 수 일치');
+    }
     if (d.sentNotes) {
       ok(Array.isArray(d.sentNotes) && d.sentNotes.length === d.passage.length,
         tag + ' 문장별 분석 수가 본문 문장 수와 일치 (' + (d.sentNotes ? d.sentNotes.length : 0) + '/' + d.passage.length + ')');

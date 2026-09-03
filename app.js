@@ -203,67 +203,202 @@
     return { qh: qh, ah: ah };
   }
 
-  /* ── 4. 워크북 (해석 쓰기 · 순서 배열) ─────────────────── */
-  function genWorkbook() {
-    const type = $('wbType').value;
-    const cntVal = $('wbCount').value;
-    const r = rng();
-    if (type === 'trans') {
-      // 해석 쓰기: 본문 문장을 순서대로 (일부만 뽑아도 본문 순서 유지)
-      let idxs = unitData.passage.map((_, i) => i);
-      if (cntVal !== 'all') {
-        idxs = QLogic.pickN(idxs, parseInt(cntVal, 10), r).sort((x, y) => x - y);
-      }
-      let q = sheetHead('워크북 — 해석 쓰기');
-      q += `<div class="direction-line">※ 주어진 영어 문장을 한글로 해석하시오. (1~${idxs.length})</div>`;
-      let a = sheetHead('워크북 — 해석 쓰기 정답');
-      idxs.forEach((pi, i) => {
-        const s = unitData.passage[pi];
-        q += `<div class="q-item"><div class="q-text"><span class="q-num">${i + 1}.</span>${esc(s.en)}</div><div class="write-box"></div></div>`;
-        a += `<div class="a-item"><b>${i + 1}.</b> ${esc(s.en)}<div class="a-exp"><span class="a-ans">${esc(s.ko)}</span></div></div>`;
-      });
-      showSheets(q, a);
-      return;
-    }
-    // 순서 배열: 한 구간 안에서 연속 4문장(주어진 글 1 + A·B·C)을 뽑아 섞는다
+  /* ── 4. 워크북 (7가지 유형 + 전체) ─────────────────── */
+  const WB_LABEL = {
+    trans: '해석 쓰기', vocab: '어휘 선택', gram: '어법 선택', verb: '동사 바꾸기',
+    fix: '어법 오류 수정', insert: '문장 삽입', order: '순서 배열',
+  };
+  const WB_DIR = {
+    trans: '주어진 영어 문장을 한글로 해석하시오.',
+    vocab: '괄호 안에서 문맥상 적절한 것을 고르시오.',
+    gram: '괄호 안에서 어법상 적절한 것을 고르시오.',
+    verb: '괄호 안의 동사를 어법상 알맞은 형태로 고치시오.',
+    fix: '다음 문장에서 어법상 어색한 부분을 찾아 바르게 고치시오.',
+    insert: '글의 흐름상 주어진 문장이 들어가기에 가장 적절한 곳을 고르시오.',
+    order: '주어진 글 다음에 이어질 글의 순서를 쓰시오.',
+  };
+
+  function wbCountOf(cntVal, poolSize, ratio) {
+    if (cntVal === 'all') return poolSize;
+    return Math.min(poolSize, Math.max(1, Math.round(parseInt(cntVal, 10) * (ratio || 1))));
+  }
+
+  // 해석 쓰기
+  function wbTrans(r, cntVal) {
+    let idxs = unitData.passage.map((_, i) => i);
+    if (cntVal !== 'all') idxs = QLogic.pickN(idxs, parseInt(cntVal, 10), r).sort((x, y) => x - y);
+    let q = '', a = '';
+    idxs.forEach((pi, i) => {
+      const s = unitData.passage[pi];
+      q += `<div class="q-item"><div class="q-text q-sent"><span class="q-num">${i + 1}.</span>${esc(s.en)}</div><div class="write-box"></div></div>`;
+      a += `<div class="a-item"><b>${i + 1}.</b> ${esc(s.en)}<div class="a-exp"><span class="a-ans">${esc(s.ko)}</span></div></div>`;
+    });
+    return { q: q, a: a, n: idxs.length };
+  }
+
+  // 어휘 선택 / 어법 선택 공용: pairs = [{i, o(정답), x(오답)}]
+  function wbChoice(pairs, r, cntVal) {
+    let sel = pairs.map((_, i) => i);
+    if (cntVal !== 'all') sel = QLogic.pickN(sel, parseInt(cntVal, 10), r).sort((x, y) => x - y);
+    let q = '', a = '';
+    sel.forEach((pi, n) => {
+      const p = pairs[pi];
+      const s = unitData.passage[p.i].en;
+      const flip = r() < 0.5;
+      const box = `<b>( ${esc(flip ? p.x : p.o)} / ${esc(flip ? p.o : p.x)} )</b>`;
+      const shown = esc(s).replace(esc(p.o), box);
+      q += `<div class="q-item"><div class="q-text q-sent"><span class="q-num">${n + 1}.</span>${shown}</div></div>`;
+      a += `<div class="a-item"><b>${n + 1}.</b> <span class="a-ans">${esc(p.o)}</span></div>`;
+    });
+    return { q: q, a: a, n: sel.length };
+  }
+
+  // 동사 바꾸기: verbs = [{i, o(정답 형태), b(원형)}]
+  function wbVerbFrag(r, cntVal) {
+    const pool = unitData.wbVerb;
+    let sel = pool.map((_, i) => i);
+    if (cntVal !== 'all') sel = QLogic.pickN(sel, parseInt(cntVal, 10), r).sort((x, y) => x - y);
+    let q = '', a = '';
+    sel.forEach((pi, n) => {
+      const p = pool[pi];
+      const s = unitData.passage[p.i].en;
+      const shown = esc(s).replace(esc(p.o), `<b>( ${esc(p.b)} )</b>`);
+      q += `<div class="q-item"><div class="q-text q-sent"><span class="q-num">${n + 1}.</span>${shown}</div></div>`;
+      a += `<div class="a-item"><b>${n + 1}.</b> <span class="a-ans">${esc(p.o)}</span></div>`;
+    });
+    return { q: q, a: a, n: sel.length };
+  }
+
+  // 어법 오류 수정: wbGram의 오답형을 문장에 심고 찾아 고치게 한다
+  function wbFix(pairs, r, cntVal) {
+    let sel = pairs.map((_, i) => i);
+    if (cntVal !== 'all') sel = QLogic.pickN(sel, parseInt(cntVal, 10), r).sort((x, y) => x - y);
+    let q = '', a = '';
+    sel.forEach((pi, n) => {
+      const p = pairs[pi];
+      const s = unitData.passage[p.i].en;
+      const shown = esc(s).replace(esc(p.o), esc(p.x));
+      q += `<div class="q-item"><div class="q-text q-sent"><span class="q-num">${n + 1}.</span>${shown}</div><div class="write-box" style="height:34px"></div></div>`;
+      a += `<div class="a-item"><b>${n + 1}.</b> <span class="a-ans">${esc(p.x)} → ${esc(p.o)}</span></div>`;
+    });
+    return { q: q, a: a, n: sel.length };
+  }
+
+  // 구간 안에서 연속 windowLen문장 시작점들을 겹치지 않게 뽑는다
+  function wbWindows(want, windowLen, r) {
     const ranges = Array.isArray(unitData.sections) && unitData.sections.length
       ? unitData.sections.map((s) => [s.start, s.end])
       : [[0, unitData.passage.length - 1]];
     const starts = [];
     ranges.forEach(([st, en]) => {
-      for (let i = st; i + 3 <= en; i++) starts.push(i);
+      for (let i = st; i + windowLen - 1 <= en; i++) starts.push(i);
     });
-    if (!starts.length) { alert('본문이 짧아 순서 배열을 만들 수 없습니다.'); return; }
-    const want = cntVal === 'all' ? 8 : Math.ceil(parseInt(cntVal, 10) / 4);
-    // 겹치지 않는 시작점 우선 선택
-    const shuffledStarts = QLogic.shuffle(starts, r);
+    const shuffled = QLogic.shuffle(starts, r);
     const chosen = [];
-    for (const st of shuffledStarts) {
-      if (chosen.every((c) => Math.abs(c - st) >= 4)) chosen.push(st);
+    for (const st of shuffled) {
+      if (chosen.every((c) => Math.abs(c - st) >= windowLen)) chosen.push(st);
       if (chosen.length >= want) break;
     }
-    for (const st of shuffledStarts) {
+    for (const st of shuffled) {
       if (chosen.length >= want) break;
       if (!chosen.includes(st)) chosen.push(st);
     }
+    return chosen;
+  }
+
+  // 문장 삽입: 연속 5문장 중 가운데 하나를 빼서 위치를 고르게 한다
+  function wbInsert(r, cntVal) {
+    const want = cntVal === 'all' ? 5 : Math.max(2, Math.round(parseInt(cntVal, 10) / 4));
+    const chosen = wbWindows(want, 5, r);
+    let q = '', a = '';
+    chosen.forEach((st, i) => {
+      const k = 1 + Math.floor(r() * 3); // 제거할 문장의 창 내 위치(1~3)
+      const given = unitData.passage[st + k].en;
+      const remain = [0, 1, 2, 3, 4].filter((d) => d !== k).map((d) => unitData.passage[st + d].en);
+      let flow = '';
+      remain.forEach((sen, j) => { flow += ` ( ${CIRC[j]} ) ${esc(sen)}`; });
+      flow += ` ( ${CIRC[4]} )`;
+      q += `<div class="q-item"><div class="q-text q-sent"><span class="q-num">${i + 1}.</span>[주어진 문장] <b>${esc(given)}</b></div>` +
+        `<div style="margin:6px 0 0 14px">${flow}</div></div>`;
+      a += `<div class="a-item"><b>${i + 1}.</b> <span class="a-ans">${CIRC[k]}</span></div>`;
+    });
+    return { q: q, a: a, n: chosen.length };
+  }
+
+  // 순서 배열: 연속 4문장(주어진 글 1 + A·B·C 섞기)
+  function wbOrder(r, cntVal) {
+    const want = cntVal === 'all' ? 8 : Math.max(2, Math.round(parseInt(cntVal, 10) / 4));
+    const chosen = wbWindows(want, 4, r);
+    if (!chosen.length) return { q: '', a: '', n: 0 };
     const LET = ['(A)', '(B)', '(C)'];
-    let q = sheetHead('워크북 — 순서 배열');
-    q += `<div class="direction-line">※ 주어진 글 다음에 이어질 글의 순서를 쓰시오. (1~${chosen.length})</div>`;
-    let a = sheetHead('워크북 — 순서 배열 정답');
+    let q = '', a = '';
     chosen.forEach((st, i) => {
       const rest = [unitData.passage[st + 1], unitData.passage[st + 2], unitData.passage[st + 3]];
       let perm = QLogic.shuffle([0, 1, 2], r);
       let guard = 0;
       while (perm.join() === '0,1,2' && guard < 10) { perm = QLogic.shuffle([0, 1, 2], r); guard++; }
       if (perm.join() === '0,1,2') perm = [1, 0, 2];
-      // perm[j] = 화면 j번째 자리에 오는 원문 문장 번호 → 정답: 원문 순서대로의 라벨
       const answer = [0, 1, 2].map((orig) => LET[perm.indexOf(orig)]).join(' - ');
-      q += `<div class="q-item"><div class="q-text"><span class="q-num">${i + 1}.</span>[주어진 글] ${esc(unitData.passage[st].en)}</div>`;
+      q += `<div class="q-item"><div class="q-text q-sent"><span class="q-num">${i + 1}.</span>[주어진 글] ${esc(unitData.passage[st].en)}</div>`;
       perm.forEach((origIdx, j) => {
         q += `<div style="margin:6px 0 0 14px">${LET[j]} ${esc(rest[origIdx].en)}</div>`;
       });
       q += `<div style="margin:10px 0 0 14px">답: (      ) - (      ) - (      )</div></div>`;
       a += `<div class="a-item"><b>${i + 1}.</b> <span class="a-ans">${esc(answer)}</span></div>`;
+    });
+    return { q: q, a: a, n: chosen.length };
+  }
+
+  function genWorkbook() {
+    const type = $('wbType').value;
+    const cntVal = $('wbCount').value;
+    const r = rng();
+    const hasVocab = Array.isArray(unitData.wbVocab) && unitData.wbVocab.length > 0;
+    const hasGram = Array.isArray(unitData.wbGram) && unitData.wbGram.length > 0;
+    const hasVerb = Array.isArray(unitData.wbVerb) && unitData.wbVerb.length > 0;
+
+    function runOne(t, cv, gramPool) {
+      if (t === 'trans') return wbTrans(r, cv);
+      if (t === 'vocab') return hasVocab ? wbChoice(unitData.wbVocab, r, cv) : null;
+      if (t === 'gram') return hasGram ? wbChoice(gramPool || unitData.wbGram, r, cv) : null;
+      if (t === 'verb') return hasVerb ? wbVerbFrag(r, cv) : null;
+      if (t === 'fix') return hasGram ? wbFix(gramPool || unitData.wbGram, r, cv) : null;
+      if (t === 'insert') return wbInsert(r, cv);
+      if (t === 'order') return wbOrder(r, cv);
+      return null;
+    }
+
+    if (type !== 'all') {
+      const frag = runOne(type, cntVal, null);
+      if (!frag) { alert('이 단원에는 아직 [' + WB_LABEL[type] + '] 데이터가 없습니다. (단원 등록 시 함께 만듭니다)'); return; }
+      let q = sheetHead('워크북 — ' + WB_LABEL[type]);
+      q += `<div class="direction-line">※ ${WB_DIR[type]} (1~${frag.n})</div>` + frag.q;
+      const a = sheetHead('워크북 — ' + WB_LABEL[type] + ' 정답') + frag.a;
+      showSheets(q, a);
+      return;
+    }
+
+    // 전체 유형: 어법 선택과 오류 수정이 같은 문장을 쓰지 않도록 wbGram을 반씩 나눈다
+    let gramA = null, gramB = null;
+    if (hasGram) {
+      const mixed = QLogic.shuffle(unitData.wbGram, r);
+      const half = Math.ceil(mixed.length / 2);
+      gramA = mixed.slice(0, half).sort((x, y) => x.i - y.i);
+      gramB = mixed.slice(half).sort((x, y) => x.i - y.i);
+    }
+    const PLAN = [
+      ['trans', '10', null], ['vocab', '10', null], ['gram', '10', gramA],
+      ['verb', '8', null], ['fix', '8', gramB], ['insert', '10', null], ['order', '10', null],
+    ];
+    let q = sheetHead('워크북 — 전체 유형');
+    let a = sheetHead('워크북 — 전체 유형 정답');
+    let secNo = 0;
+    PLAN.forEach(([t, cv, pool]) => {
+      const frag = runOne(t, cv, pool);
+      if (!frag || !frag.n) return;
+      secNo++;
+      q += `<h3 class="sec-head">${secNo}. ${WB_LABEL[t]}</h3><div class="direction-line">※ ${WB_DIR[t]} (1~${frag.n})</div>` + frag.q;
+      a += `<h3 class="sec-head">${secNo}. ${WB_LABEL[t]}</h3>` + frag.a;
     });
     showSheets(q, a);
   }
@@ -330,7 +465,12 @@
     if (Array.isArray(unitData.sentNotes) && unitData.sentNotes.length === unitData.passage.length) {
       q += `<h3 class="sec-head">문장별 분석</h3>`;
       unitData.passage.forEach((s, i) => {
-        q += `<div class="sent-ana"><div class="sa-en"><b>${String(i + 1).padStart(2, '0')}</b> ${esc(s.en)}</div>` +
+        const tag = (Array.isArray(unitData.sentTag) && unitData.sentTag[i])
+          ? `<span class="sa-tag">${esc(unitData.sentTag[i])}</span>` : '';
+        const direct = (Array.isArray(unitData.sentDirect) && unitData.sentDirect[i])
+          ? `<div class="sa-direct">직독직해: ${esc(unitData.sentDirect[i])}</div>` : '';
+        q += `<div class="sent-ana"><div class="sa-en"><b>${String(i + 1).padStart(2, '0')}</b> ${tag}${esc(s.en)}</div>` +
+          direct +
           `<div class="sa-ko">${esc(s.ko)}</div>` +
           (unitData.sentNotes[i] ? `<div class="sa-note">▶ ${esc(unitData.sentNotes[i])}</div>` : '') +
           `</div>`;
