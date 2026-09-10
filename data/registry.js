@@ -9,7 +9,7 @@ window.QREG = {
       grade: '고1',
       units: [
         { id: 'l01', label: 'L1 Connecting Amy\'s Dots', file: 'l01.js' },
-      ],
+        { id: 'm2609', label: '2026 9월 학평(고1) 19·29·31·33·36·40번', file: 'm2609.js' },      ],
     },
     {
       id: 'miraen-eng2',
