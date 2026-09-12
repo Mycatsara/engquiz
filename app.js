@@ -5,7 +5,8 @@
   const $ = (id) => document.getElementById(id);
   const CIRC = ['①', '②', '③', '④', '⑤'];
   let currentTab = 'cloze';
-  let unitData = null; // 현재 단원 데이터
+  let unitData = null; // 현재 화면용 데이터 (지문 선택이 있으면 그 지문만 잘라낸 것)
+  let rawUnit = null;  // 단원 파일 원본
 
   function esc(s) {
     return String(s).replace(/[&<>"]/g, (c) => (
@@ -37,34 +38,92 @@
     const p = profile();
     const u = p.units.find((x) => x.id === $('selUnit').value);
     const key = p.id + '/' + u.id;
-    unitData = null;
+    unitData = null; rawUnit = null;
     clearSheets();
     window.QUNITS = window.QUNITS || {};
-    if (window.QUNITS[key]) { unitData = window.QUNITS[key]; onUnitReady(); return; }
+    if (window.QUNITS[key]) { rawUnit = window.QUNITS[key]; onUnitReady(); return; }
     const s = document.createElement('script');
     s.src = 'data/' + p.id + '/' + u.file;
     s.onload = () => {
-      unitData = window.QUNITS[key] || null;
-      if (!unitData) alert('단원 데이터를 읽지 못했습니다: ' + key);
+      rawUnit = window.QUNITS[key] || null;
+      if (!rawUnit) alert('단원 데이터를 읽지 못했습니다: ' + key);
       onUnitReady();
     };
     s.onerror = () => alert('단원 파일을 찾을 수 없습니다: data/' + p.id + '/' + u.file);
     document.body.appendChild(s);
   }
 
+  // 모의고사처럼 서로 관계없는 지문 묶음(independent)이면 지문 선택 칸을 채운다
+  function setupSec() {
+    const wrap = $('secWrap'); const sel = $('selSec');
+    const secs = rawUnit && rawUnit.independent && Array.isArray(rawUnit.sections) ? rawUnit.sections : null;
+    if (!secs) { wrap.hidden = true; sel.innerHTML = ''; return; }
+    sel.innerHTML = secs.map((s) => `<option value="${esc(s.id)}">${esc(s.label)}</option>`).join('') +
+      '<option value="ALL">전체 (모든 지문 한꺼번에)</option>';
+    wrap.hidden = false;
+  }
+
+  function secLabelToken(label) {
+    const m = String(label).match(/^\s*([0-9~·]+번)/);
+    return m ? m[1] : null;
+  }
+
+  // 원본 단원에서 지문 하나만 잘라낸 화면용 데이터를 만든다
+  function makeView(u, secId) {
+    if (!u || !u.independent || !secId || secId === 'ALL') return u;
+    const s = (u.sections || []).find((x) => x.id === secId);
+    if (!s) return u;
+    const st = s.start, en = s.end, len = en - st + 1;
+    const slice = (arr) => (Array.isArray(arr) && arr.length === u.passage.length ? arr.slice(st, en + 1) : arr);
+    const shiftIdx = (arr) => (Array.isArray(arr) ? arr.filter((x) => x.i >= st && x.i <= en).map((x) => Object.assign({}, x, { i: x.i - st })) : arr);
+    const text = ' ' + u.passage.slice(st, en + 1).map((x) => x.en).join(' ').toLowerCase().replace(/[^a-z' ]/g, ' ') + ' ';
+    const inText = (w) => { const k = String(w).toLowerCase().split(/[^a-z']+/)[0] || ''; return k && text.includes(' ' + k.slice(0, Math.max(4, k.length - 2))); };
+    const tok = secLabelToken(s.label);
+    const analysis = Array.isArray(u.analysis) ? u.analysis.map((a) => {
+      const paras = String(a.body).split(/\n\s*\n/);
+      const kept = paras.filter((p) => !/[0-9]+번/.test(p) || (tok && p.includes(tok)));
+      return { title: a.title, body: kept.join('\n\n') };
+    }).filter((a) => a.body.trim()) : u.analysis;
+    return Object.assign({}, u, {
+      passage: u.passage.slice(st, en + 1),
+      sections: [Object.assign({}, s, { start: 0, end: len - 1 })],
+      bank: u.bank.filter((q) => q.sec === s.id || (q.sec === 'V' && q.p === s.id)),
+      words: u.words.filter((w) => inText(w.en)),
+      wbVocab: shiftIdx(u.wbVocab), wbGram: shiftIdx(u.wbGram), wbVerb: shiftIdx(u.wbVerb),
+      sentTag: slice(u.sentTag), sentDirect: slice(u.sentDirect), sentNotes: slice(u.sentNotes),
+      analysis,
+    });
+  }
+
+  function applyView() {
+    unitData = makeView(rawUnit, $('selSec').value);
+    clearSheets();
+    if (currentTab === 'passage') renderPassage();
+    if (currentTab === 'analysis') renderAnalysis();
+  }
+
   function onUnitReady() {
-    if (!unitData) return;
+    if (!rawUnit) return;
+    setupSec();
+    unitData = makeView(rawUnit, $('selSec').value);
     if (currentTab === 'passage') renderPassage();
     if (currentTab === 'analysis') renderAnalysis();
   }
 
   /* ── 공통 렌더 ─────────────────── */
+  function secSub() {
+    if (!rawUnit || !rawUnit.independent) return '';
+    const v = $('selSec').value;
+    const s = (rawUnit.sections || []).find((x) => x.id === v);
+    return s ? ' · ' + esc(s.label) : '';
+  }
+
   function sheetHead(subtitle) {
     const p = profile();
     const u = p.units.find((x) => x.id === $('selUnit').value);
     return `<div class="sheet-head">
       <h2>${esc(subtitle)}</h2>
-      <div class="sub">${esc(p.label)} · ${esc(u.label)}</div>
+      <div class="sub">${esc(p.label)} · ${esc(u.label)}${secSub()}</div>
       <div class="name-line">학년/반: <span></span> 이름: <span></span></div>
     </div>`;
   }
@@ -378,7 +437,7 @@
 
   // 단원별 고정 시드 (회차 분할·고정 시험지용)
   function unitSeed(extra) {
-    const key = $('selProfile').value + '/' + $('selUnit').value;
+    const key = $('selProfile').value + '/' + $('selUnit').value + '/' + ($('selSec').value || '');
     let h = 0;
     for (let ci = 0; ci < key.length; ci++) h = (h * 31 + key.charCodeAt(ci)) >>> 0;
     return (h + (extra || 0)) >>> 0;
@@ -649,6 +708,7 @@
 
   $('selProfile').addEventListener('change', fillUnits);
   $('selUnit').addEventListener('change', loadUnit);
+  $('selSec').addEventListener('change', applyView);
   $('passKo').addEventListener('change', () => {
     if (unitData && currentTab === 'passage') renderPassage();
   });
