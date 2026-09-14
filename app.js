@@ -100,6 +100,7 @@
     clearSheets();
     if (currentTab === 'passage') renderPassage();
     if (currentTab === 'analysis') renderAnalysis();
+    if (currentTab === 'comic') renderComic();
   }
 
   function onUnitReady() {
@@ -108,6 +109,7 @@
     unitData = makeView(rawUnit, $('selSec').value);
     if (currentTab === 'passage') renderPassage();
     if (currentTab === 'analysis') renderAnalysis();
+    if (currentTab === 'comic') renderComic();
   }
 
   /* ── 공통 렌더 ─────────────────── */
@@ -136,6 +138,7 @@
   }
 
   function showSheets(qHtml, aHtml) {
+    ['btnPrintA', 'btnToggleA'].forEach((id) => { $(id).hidden = currentTab === 'comic'; });
     $('sheetQ').innerHTML = qHtml;
     $('sheetA').innerHTML = aHtml;
     $('sheetA').classList.add('hidden-screen');
@@ -556,13 +559,14 @@
     });
     aClone.classList.add('pdf-answer-block');
     root.appendChild(qClone);
-    root.appendChild(aClone);
+    if (currentTab !== 'comic') root.appendChild(aClone);
 
     const btn = $('btnSave');
     const oldLabel = btn.textContent;
     btn.disabled = true;
     btn.textContent = 'PDF 만드는 중…';
     try {
+      await Promise.all(Array.from(root.querySelectorAll('img')).map((img) => img.decode()));
       const worker = window.html2pdf().set({
         margin: [12, 12, 14, 12],
         filename: fname,
@@ -644,6 +648,17 @@
   }
 
   /* ── 5. 본문 보기 ─────────────────── */
+  function renderComic() {
+    const isAmy = $('selProfile').value === 'nunggok-hs1' && $('selUnit').value === 'l01';
+    const q = sheetHead('본문 만화') + (isAmy
+      ? '<p class="comic-note">본문의 흐름을 8장면으로 요약했습니다. 대사는 한국어 요약이며, 인물과 장면은 이해를 돕는 삽화입니다.</p>' +
+        '<a class="comic-link" href="assets/comics/amy-dots.png" target="_blank" rel="noopener" title="만화 크게 보기">' +
+        '<img class="comic-page" src="assets/comics/amy-dots.png" width="1024" height="1536" alt="Amy가 미술 수업, 기술 전공, 진로 고민, 매니저의 조언, 어린 시절 이야기 사랑을 거쳐 예술과 기술을 연결하고 테크니컬 디렉터 직무를 발견하는 8칸 만화"></a>' +
+        '<p class="comic-note">핵심: 관심사를 하나로 제한하지 말고, 삶의 여러 경험이 만나는 지점을 찾아보자.</p>'
+      : '<p>이 단원에는 아직 본문 만화가 없습니다. 능곡고 1학년의 L1 Connecting Amy\'s Dots에서 볼 수 있습니다.</p>');
+    showSheets(q, '');
+  }
+
   function renderPassage() {
     const showKo = $('passKo').checked;
     let q = sheetHead('본문 전체');
@@ -670,6 +685,7 @@
     clearSheets();
     if (currentTab === 'passage' && unitData) renderPassage();
     if (currentTab === 'analysis' && unitData) renderAnalysis();
+    if (currentTab === 'comic' && unitData) renderComic();
   });
 
   // 단어 시험: 화면에서 답 칸 클릭 → 정답 표시/숨김
