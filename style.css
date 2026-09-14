@@ -196,7 +196,7 @@ td.word-ans .revealed { color: #c92c39; font-weight: 700; }
 .answer-sheet .a-exp { font-size: 12px; color: #444; margin-left: 22px; }
 
 footer { text-align: center; padding: 16px; color: #94a3b8; }
-.comic-page { display: block; width: 100%; height: auto; margin: 0 auto; max-height: 210mm; object-fit: contain; break-inside: avoid; }
+.comic-page { display: block; width: 100%; max-width: 140mm; height: auto; margin: 0 auto; break-inside: avoid; }
 .comic-link { display: block; }
 .comic-note { font-size: 12px; line-height: 1.5; color: #475569; }
 
@@ -218,3 +218,4 @@ footer { text-align: center; padding: 16px; color: #94a3b8; }
   /* 화면에서 눌러 본 단어 정답은 인쇄에 나오지 않게 */
   td.word-ans .revealed { display: none !important; }
 }
+
