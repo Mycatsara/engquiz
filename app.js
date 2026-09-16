@@ -649,13 +649,17 @@
 
   /* ── 5. 본문 보기 ─────────────────── */
   function renderComic() {
-    const isAmy = $('selProfile').value === 'nunggok-hs1' && $('selUnit').value === 'l01';
-    const q = sheetHead('본문 만화') + (isAmy
+    const comics = {
+      'nunggok-hs1/l01': { file: 'amy-dots-print.png', alt: 'Amy가 다양한 관심사를 연결하고 테크니컬 디렉터 직무를 발견하는 8칸 만화', point: '관심사를 하나로 제한하지 말고, 삶의 여러 경험이 만나는 지점을 찾아보자.' },
+      'miraen-eng2/u05': { file: 'miraen-u05-print.png', alt: '아디치에의 진로 선택과 자기다움, 팀 쿡의 사람을 위한 기술과 인문학에 관한 8칸 만화', point: '자기다운 삶에 도전하고, 인간의 가치와 연민으로 기술을 사람에게 도움이 되게 하자.' }
+    };
+    const comic = comics[$('selProfile').value + '/' + $('selUnit').value];
+    const q = sheetHead('본문 만화') + (comic
       ? '<p class="comic-note">본문의 흐름을 8장면으로 요약했습니다. 대사는 한국어 요약이며, 인물과 장면은 이해를 돕는 삽화입니다.</p>' +
-        '<a class="comic-link" href="assets/comics/amy-dots.png" target="_blank" rel="noopener" title="만화 크게 보기">' +
-        '<img class="comic-page" src="assets/comics/amy-dots.png" width="1024" height="1536" alt="Amy가 미술 수업, 기술 전공, 진로 고민, 매니저의 조언, 어린 시절 이야기 사랑을 거쳐 예술과 기술을 연결하고 테크니컬 디렉터 직무를 발견하는 8칸 만화"></a>' +
-        '<p class="comic-note">핵심: 관심사를 하나로 제한하지 말고, 삶의 여러 경험이 만나는 지점을 찾아보자.</p>'
-      : '<p>이 단원에는 아직 본문 만화가 없습니다. 능곡고 1학년의 L1 Connecting Amy\'s Dots에서 볼 수 있습니다.</p>');
+        `<a class="comic-link" href="assets/comics/${comic.file}" target="_blank" rel="noopener" title="만화 크게 보기">` +
+        `<img class="comic-page" src="assets/comics/${comic.file}" width="1024" height="1536" alt="${esc(comic.alt)}"></a>` +
+        `<p class="comic-note">핵심: ${esc(comic.point)}</p>`
+      : '<p>이 단원에는 아직 본문 만화가 없습니다. 능곡고 L1과 미래엔 영어Ⅱ 5과에서 볼 수 있습니다.</p>');
     showSheets(q, '');
   }
 
