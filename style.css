@@ -199,6 +199,7 @@ footer { text-align: center; padding: 16px; color: #94a3b8; }
 .comic-page { display: block; width: 100%; max-width: 140mm; height: auto; margin: 0 auto; break-inside: avoid; }
 .comic-link { display: block; }
 .comic-note { font-size: 12px; line-height: 1.5; color: #475569; }
+.comic-section + .comic-section { break-before: page; page-break-before: always; }
 
 /* ── 인쇄 ─────────────────────────── */
 @media print {

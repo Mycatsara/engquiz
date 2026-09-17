@@ -651,9 +651,22 @@
   function renderComic() {
     const comics = {
       'nunggok-hs1/l01': { file: 'amy-dots-print.png', alt: 'Amy가 다양한 관심사를 연결하고 테크니컬 디렉터 직무를 발견하는 8칸 만화', point: '관심사를 하나로 제한하지 말고, 삶의 여러 경험이 만나는 지점을 찾아보자.' },
-      'miraen-eng2/u05': { file: 'miraen-u05-print.png', alt: '아디치에의 진로 선택과 자기다움, 팀 쿡의 사람을 위한 기술과 인문학에 관한 8칸 만화', point: '자기다운 삶에 도전하고, 인간의 가치와 연민으로 기술을 사람에게 도움이 되게 하자.' }
+      'miraen-eng2/u05': { pages: [
+        { file: 'miraen-u05-16-p1.png', title: '아디치에 — 자신의 열망을 따라가기 (1~8컷)', alt: '의대 진학과 중퇴, 미국 유학과 도전, 자기다운 삶에 대한 아디치에의 조언', point: '성공을 확신하지 못해도 도전하고, 남을 기쁘게 하려고 자신을 바꾸지 말자.' },
+        { file: 'miraen-u05-16-p2.png', title: '팀 쿡 — 사람을 위한 기술 (9~16컷)', alt: '기술의 이점과 위험, 인간적 가치와 인문학, 사람을 중심에 둔 기술에 대한 팀 쿡의 조언', point: '기술에 인간의 가치와 연민을 담고, 인문학과 연결해 모두를 위한 발전을 이루자.' }
+      ] }
     };
     const comic = comics[$('selProfile').value + '/' + $('selUnit').value];
+    if (comic && comic.pages) {
+      const q = comic.pages.map((page) => '<section class="comic-section">' +
+        sheetHead('본문 만화 · ' + page.title) +
+        '<p class="comic-note">총 16컷 · 왼쪽 위부터 오른쪽, 다음 줄 순으로 읽으세요. 대사는 본문의 한국어 요약이며 그림은 이해를 돕는 삽화입니다.</p>' +
+        `<a class="comic-link" href="assets/comics/${page.file}" target="_blank" rel="noopener" title="만화 크게 보기">` +
+        `<img class="comic-page" src="assets/comics/${page.file}" width="1024" height="1536" alt="${esc(page.alt)}"></a>` +
+        `<p class="comic-note">핵심: ${esc(page.point)}</p></section>`).join('');
+      showSheets(q, '');
+      return;
+    }
     const q = sheetHead('본문 만화') + (comic
       ? '<p class="comic-note">본문의 흐름을 8장면으로 요약했습니다. 대사는 한국어 요약이며, 인물과 장면은 이해를 돕는 삽화입니다.</p>' +
         `<a class="comic-link" href="assets/comics/${comic.file}" target="_blank" rel="noopener" title="만화 크게 보기">` +
